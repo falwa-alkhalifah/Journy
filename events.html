@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Journy | Events</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+<div class="container nav">
+<div class="brand">رحلة<span class="brand-sub">Journy</span></div>
+<nav>
+<a href="index.html">Home</a>
+<a href="events.html">Events</a>
+<a href="planner.html">Trip Planner</a>
+<a href="reservations.html">My Reservations</a>
+<a href="login.html" class="btn-outline">Login</a>
+</nav>
+</div>
+</header>
+
+
+<main class="container">
+<section class="search-panel">
+<h1>Browse Events</h1>
+<div class="filters">
+<input id="search-input" placeholder="Search by name or city...">
+<select id="category-select">
+<option value="all">All Categories</option>
+<option value="sports">Sports</option>
+<option value="music">Music</option>
+<option value="culture">Culture</option>
+<option value="tech">Tech</option>
+</select>
+<input type="date" id="date-input">
+</div>
+</section>
+
+
+<section class="events-list" id="events-list">
+<!-- populated by JS -->
+</section>
+</main>
+
+
+<footer class="site-footer">
+<div class="container">
+<p>&copy; 2025 Journy</p>
+</div>
+</footer>
+
+
+<script src="js/main.js"></script>
+</body>
+</html>

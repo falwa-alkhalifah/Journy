@@ -1,56 +1,63 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Journy | Events</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journy - Events</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="site-header">
-<div class="container nav">
-<div class="brand">رحلة<span class="brand-sub">Journy</span></div>
-<nav>
-<a href="index.html">Home</a>
-<a href="events.html">Events</a>
-<a href="planner.html">Trip Planner</a>
-<a href="reservations.html">My Reservations</a>
-<a href="login.html" class="btn-outline">Login</a>
-</nav>
-</div>
+<header>
+  <nav>
+    <div class="logo">Journy</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html" class="active">Events</a></li>
+      <li><a href="planner.html">Planner</a></li>
+      <li><a href="reservations.html">Reservations</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="signup.html">Sign Up</a></li>
+    </ul>
+  </nav>
 </header>
 
-
-<main class="container">
-<section class="search-panel">
-<h1>Browse Events</h1>
-<div class="filters">
-<input id="search-input" placeholder="Search by name or city...">
-<select id="category-select">
-<option value="all">All Categories</option>
-<option value="sports">Sports</option>
-<option value="music">Music</option>
-<option value="culture">Culture</option>
-<option value="tech">Tech</option>
-</select>
-<input type="date" id="date-input">
-</div>
-</section>
-
-
-<section class="events-list" id="events-list">
-<!-- populated by JS -->
-</section>
+<main>
+  <section class="featured-events">
+    <h2>Upcoming Events</h2>
+    <div class="cards">
+      <div class="card">
+        <img src="https://source.unsplash.com/400x250/?concert" alt="">
+        <h3>Riyadh Music Festival</h3>
+        <p>March 15, 2026 | Riyadh</p>
+        <a href="event-details.html" class="btn-small">View Details</a>
+      </div>
+      <div class="card">
+        <img src="https://source.unsplash.com/400x250/?sports" alt="">
+        <h3>Formula 1 Grand Prix</h3>
+        <p>April 2, 2026 | Jeddah</p>
+        <a href="event-details.html" class="btn-small">View Details</a>
+      </div>
+      <div class="card">
+        <img src="https://source.unsplash.com/400x250/?festival" alt="">
+        <h3>Riyadh Season</h3>
+        <p>Dec 5-25, 2025 | Riyadh</p>
+        <a href="event-details.html" class="btn-small">View Details</a>
+      </div>
+      <div class="card">
+        <img src="https://source.unsplash.com/400x250/?theatre" alt="">
+        <h3>Jeddah Theater Week</h3>
+        <p>Nov 10-17, 2025 | Jeddah</p>
+        <a href="event-details.html" class="btn-small">View Details</a>
+      </div>
+    </div>
+  </section>
 </main>
 
-
-<footer class="site-footer">
-<div class="container">
-<p>&copy; 2025 Journy</p>
-</div>
+<footer>
+  <p>&copy; 2025 Journy. All rights reserved.</p>
 </footer>
 
-
-<script src="js/main.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

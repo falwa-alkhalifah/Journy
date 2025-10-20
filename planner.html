@@ -1,48 +1,58 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Journy | Trip Planner</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journy - Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="site-header">
-<div class="container nav">
-<div class="brand">رحلة<span class="brand-sub">Journy</span></div>
-<nav>
-<a href="index.html">Home</a>
-<a href="events.html">Events</a>
-<a href="planner.html">Trip Planner</a>
-<a href="reservations.html">My Reservations</a>
-</nav>
-</div>
+<header>
+  <nav>
+    <div class="logo">Journy</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="planner.html" class="active">Planner</a></li>
+      <li><a href="reservations.html">Reservations</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="signup.html">Sign Up</a></li>
+    </ul>
+  </nav>
 </header>
 
-
-<main class="container">
-<h1>Trip Planner</h1>
-<p>Create your trip by adding reservations as stops. (Map placeholder — add integration later.)</p>
-<div class="planner-grid">
-<div class="planner-left">
-<h3>Your Stops</h3>
-<ul id="stops-list"></ul>
-</div>
-<div class="planner-right">
-<div class="map-placeholder">Map placeholder</div>
-<p class="muted">(Map integration — Google Maps or Leaflet can be added later.)</p>
-</div>
-</div>
+<main>
+  <section class="planner-section">
+    <h2>Create Your Trip</h2>
+    <p>Plan your visits, add stops, and organize events in your trip.</p>
+    <div class="planner-cards">
+      <div class="card">
+        <h3>Day 1: Riyadh Music Festival</h3>
+        <p>March 15, 2026 | Riyadh</p>
+        <button class="btn-small">Edit</button>
+        <button class="btn-small" style="background:#ff4444;">Remove</button>
+      </div>
+      <div class="card">
+        <h3>Day 2: Explore Riyadh Landmarks</h3>
+        <p>Museum & Heritage Center | Riyadh</p>
+        <button class="btn-small">Edit</button>
+        <button class="btn-small" style="background:#ff4444;">Remove</button>
+      </div>
+      <div class="card">
+        <h3>Day 3: Riyadh Season</h3>
+        <p>Entertainment & Culture | Riyadh</p>
+        <button class="btn-small">Edit</button>
+        <button class="btn-small" style="background:#ff4444;">Remove</button>
+      </div>
+    </div>
+  </section>
 </main>
 
-
-<footer class="site-footer">
-<div class="container">
-<p>&copy; 2025 Journy</p>
-</div>
+<footer>
+  <p>&copy; 2025 Journy. All rights reserved.</p>
 </footer>
 
-
-<script src="js/main.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

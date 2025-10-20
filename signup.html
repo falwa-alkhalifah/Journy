@@ -1,41 +1,48 @@
-<!doctype html>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Journy | Sign Up</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journy - Sign Up</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="site-header">
-<div class="container nav">
-<div class="brand">رحلة<span class="brand-sub">Journy</span></div>
-<nav>
-<a href="index.html">Home</a>
-</nav>
-</div>
+<header>
+  <nav>
+    <div class="logo">Journy</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="planner.html">Planner</a></li>
+      <li><a href="reservations.html">Reservations</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="signup.html" class="active">Sign Up</a></li>
+    </ul>
+  </nav>
 </header>
 
+<main>
+  <section class="auth-section">
+    <h2>Create a Journy Account</h2>
+    <form>
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" placeholder="Enter your name" required>
 
-<main class="container auth-page">
-<form class="auth-card" id="signup-form">
-<h2>Create account</h2>
-<label>Full name</label>
-<input type="text" id="fullname" required>
-<label>Email</label>
-<input type="email" id="su-email" required>
-<label>Password</label>
-<input type="password" id="su-password" required>
-<button class="btn-primary" type="submit">Sign up</button>
-<p>Already have an account? <a href="login.html">Login</a></p>
-</form>
+      <label for="email">Email:</label>
+      <input type="email" id="email" placeholder="Enter your email" required>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" placeholder="Create a password" required>
+
+      <button type="submit" class="btn">Sign Up</button>
+      <p>Already have an account? <a href="login.html">Login</a></p>
+    </form>
+  </section>
 </main>
 
-
-<footer class="site-footer">
-<div class="container">
-<p>&copy; 2025 Journy</p>
-</div>
+<footer>
+  <p>&copy; 2025 Journy. All rights reserved.</p>
 </footer>
-
-
-<script src="js/main.js"></script>
 </body>
 </html>

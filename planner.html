@@ -1,57 +1,83 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Journy - Planner</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+<title>رحلة | Journy - Planner</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header>
   <nav>
-    <div class="logo">Journy</div>
+    <div class="logo">رحلة | Journy</div>
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="events.html">Events</a></li>
       <li><a href="planner.html" class="active">Planner</a></li>
       <li><a href="reservations.html">Reservations</a></li>
-      <li><a href="login.html">log out</a></li>
+      <li><a href="login.html">Log Out</a></li>
     </ul>
   </nav>
 </header>
 
 <main>
   <section class="planner-section">
-    <h2>Create Your Trip</h2>
-    <p>Plan your visits, add stops, and organize events in your trip.</p>
-    <div class="planner-cards">
+    <h2>Your Itineraries</h2>
+    <p>Select an itinerary to view or edit your trip details.</p>
+
+    <div id="itineraryList" class="planner-cards">
       <div class="card">
-        <h3>Day 1: Riyadh Music Festival</h3>
-        <p>March 15, 2026 | Riyadh</p>
-        <button class="btn-small">Edit</button>
-        <button class="btn-small" style="background:#ff4444;">Remove</button>
+        <h3>Itinerary 1</h3>
+        <p>3-day Riyadh trip with events and landmarks.</p>
+        <button class="view-btn" onclick="viewItinerary('1')">View</button>
       </div>
       <div class="card">
-        <h3>Day 2: Explore Riyadh Landmarks</h3>
-        <p>Museum & Heritage Center | Riyadh</p>
-        <button class="btn-small">Edit</button>
-        <button class="btn-small" style="background:#ff4444;">Remove</button>
+        <h3>Itinerary 2</h3>
+        <p>Weekend getaway in Jeddah with cultural stops.</p>
+        <button class="view-btn" onclick="viewItinerary('2')">View</button>
       </div>
       <div class="card">
-        <h3>Day 3: Riyadh Season</h3>
-        <p>Entertainment & Culture | Riyadh</p>
-        <button class="btn-small">Edit</button>
-        <button class="btn-small" style="background:#ff4444;">Remove</button>
+        <h3>Itinerary 3</h3>
+        <p>Eastern Province food and beach experience.</p>
+        <button class="view-btn" onclick="viewItinerary('3')">View</button>
+      </div>
+    </div>
+
+    <!-- Individual itinerary details (hidden until viewed) -->
+    <div id="itineraryView" class="itinerary-view hidden">
+      <button class="back-btn" onclick="goBack()">← Back</button>
+      <h3 id="itineraryTitle">Itinerary Details</h3>
+      <div class="itinerary-detail-card">
+        <h4>Day 1: Riyadh Season Concert</h4>
+        <p>Date: March 15, 2026</p>
+        <p>Location: Boulevard Riyadh City</p>
+        <button class="btn-small edit">Edit</button>
+      </div>
+      <div class="itinerary-detail-card">
+        <h4>Day 2: Nofa Resort Stay</h4>
+        <p>Check-in: March 16, 2026</p>
+        <p>Check-out: March 17, 2026</p>
+        <button class="btn-small edit">Edit</button>
       </div>
     </div>
   </section>
 </main>
 
 <footer>
-  <p>&copy; 2025 Journy. All rights reserved.</p>
+  <p>&copy; 2025 رحلة | Journy — Designed with love for Saudi Arabia 🇸🇦</p>
 </footer>
 
-<script src="script.js"></script>
+<script>
+function viewItinerary(num) {
+  document.getElementById('itineraryList').classList.add('hidden');
+  document.getElementById('itineraryView').classList.remove('hidden');
+  document.getElementById('itineraryTitle').textContent = "Itinerary " + num + " Details";
+}
+
+function goBack() {
+  document.getElementById('itineraryList').classList.remove('hidden');
+  document.getElementById('itineraryView').classList.add('hidden');
+}
+</script>
 </body>
 </html>

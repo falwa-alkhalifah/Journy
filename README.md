@@ -14,7 +14,8 @@ Create and edit personalized trip plans.
 Accept plans and process payments.
 
 
-Pages Description
+
+Pages Description:
 
 index.html / Homepage: The main page that provides an overview and navigation to all sections. Users can access events, the planner, and other main pages.
 

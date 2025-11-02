@@ -29,6 +29,71 @@ nav .nav-links li a:hover { color:#ff6b00; }
 .btn-small { display:inline-block; margin:0 15px 15px; padding:8px 18px; background:#ff6b00; color:#fff; border-radius:5px; text-decoration:none; transition:0.3s; }
 .btn-small:hover { background:#e65b00; }
 
+/* Layout for static 4-card rows */
+section {
+  padding: 60px 50px;
+}
+
+section h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  margin-bottom: 40px;
+  text-align: center;
+  color: #333;
+}
+
+.cards-row {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  transition: 0.3s;
+  width: 270px;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(255,107,0,0.3);
+}
+
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.card h3 {
+  padding: 15px;
+  font-family: 'Playfair Display', serif;
+  color: #ff6b00;
+}
+
+.card p {
+  padding: 0 15px 15px;
+  color: #555;
+}
+
+.btn-small {
+  display: inline-block;
+  margin: 0 15px 15px;
+  padding: 8px 18px;
+  background: #ff6b00;
+  color: #fff;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.btn-small:hover {
+  background: #e65b00;
+}
 /* Footer */
 footer { text-align:center; padding:30px; background:#fff; color:#888; box-shadow:0 -3px 8px rgba(0,0,0,0.1); margin-top:50px; }
 

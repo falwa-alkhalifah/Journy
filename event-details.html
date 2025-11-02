@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <header>
   <nav>
     <div class="logo">Journy</div>
@@ -16,25 +17,56 @@
       <li><a href="events.html">Events</a></li>
       <li><a href="planner.html">Planner</a></li>
       <li><a href="reservations.html">Reservations</a></li>
-      <li><a href="login.html">log out</a></li>
+      <li><a href="login.html">Log out</a></li>
     </ul>
   </nav>
 </header>
 
 <main>
-  <section class="event-detail">
-    <h2>Riyadh Music Festival</h2>
-    <img src="https://source.unsplash.com/800x400/?concert,festival" alt="Riyadh Music Festival">
-    <p><strong>Date:</strong> March 15, 2026</p>
-    <p><strong>Location:</strong> Riyadh, Saudi Arabia</p>
-    <p><strong>Description:</strong> Enjoy a full day of live music with world-renowned artists, food stalls, and interactive activities. Perfect for families, tourists, and music lovers!</p>
-    <p><strong>Tickets Available:</strong> 200</p>
-    <button class="btn">Reserve Now</button>
+  <section style="padding:60px 100px; display:flex; flex-wrap:wrap; justify-content:center; gap:60px; align-items:flex-start; max-width:1400px; margin:auto;">
+    
+    <!-- Left side: Main event image and gallery -->
+    <div style="flex:1; min-width:550px; max-width:650px;">
+        <img src="image/MDLBEAST.jpg" alt="Riyadh Music Festival" style="border-radius:10px;height:380px;width:550px;object-fit:cover;">
+      <div style="display:flex; gap:15px; margin-top:15px; flex-wrap:wrap;">
+        <img src="image/MB1.png" style="border-radius:10px;width:calc(50% - 7.5px);height:160px;object-fit:cover;">
+        <img src="image/MB2.png" style="border-radius:10px;width:calc(50% - 7.5px);height:160px;object-fit:cover;">
+        <img src="image/MB3.png" style="border-radius:10px;width:calc(50% - 7.5px);height:160px;object-fit:cover;">
+        <img src="image/MB4.png" style="border-radius:10px;width:calc(50% - 7.5px);height:160px;object-fit:cover;">
+      </div>
+    </div>
+
+    <!-- Right side: Event details -->
+    <div class="card" style="flex:1;min-width:500px;max-width:600px;padding:40px;">
+      <h3 style="color:#ff6b00;font-size:34px;font-family:'Playfair Display',serif;margin-bottom:25px;">Riyadh Music Festival</h3>
+      <p style="font-size:18px;margin-bottom:10px;"><strong>Date:</strong> March 15, 2026</p>
+      <p style="font-size:18px;margin-bottom:10px;"><strong>Location:</strong> Riyadh, Saudi Arabia</p>
+      <p style="font-size:18px;margin-bottom:10px;"><strong>Price:</strong> 250 SAR</p>
+      <p style="font-size:18px;margin-bottom:20px;text-align:justify;"><strong>Description:</strong> Enjoy a full day of live music with world-renowned artists, delicious food stalls, and interactive activities. Perfect for families, tourists, and music lovers!</p>
+      <p style="font-size:18px;margin-bottom:30px;"><strong>Tickets Available:</strong> 200</p>
+
+      <!-- Ticket input field -->
+      <div style="margin-bottom:25px;">
+        <label for="tickets" style="font-size:18px;margin-right:10px;color: #555;  padding: 0 15px 15px;"><strong>Number of Tickets:</strong></label>
+        <input type="number" id="tickets" name="tickets" min="1" max="200" value="1" style="width:80px;padding:8px;border:2px solid #ff6b00;border-radius:8px;text-align:center;">
+      </div>
+
+      <button onclick="reserveTickets()" style="background-color:#ff6b00;color:white;border:none;border-radius:8px;font-size:17px;padding:14px 35px;cursor:pointer;">Reserve Now</button>
+    </div>
+
   </section>
 </main>
 
 <footer>
   <p>&copy; 2025 Journy. All rights reserved.</p>
 </footer>
+
+<script>
+function reserveTickets() {
+  const tickets = document.getElementById("tickets").value;
+  alert("You have reserved " + tickets + " ticket(s) for the Riyadh Music Festival!");
+}
+</script>
+
 </body>
 </html>

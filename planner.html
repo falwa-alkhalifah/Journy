@@ -44,28 +44,37 @@
   display: flex;
   flex-wrap: wrap; /* allows multiple lines if too many days */
   justify-content: center;
-  gap: 20px; /* space between cards */
+  gap: 30px; /* slightly more space between cards */
 }
 
 .day-card {
   background: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  width: 220px;
+  padding: 25px 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+  width: 300px; /* wider card */
   text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.day-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
 .day-card h4 {
   color: #ff6b00;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  font-size: 20px;
 }
 
 .day-card ul {
   margin: 0;
   padding-left: 20px;
   color: #555;
+  line-height: 1.5;
 }
+
 
 .btn-small {
   margin-top: 10px;
@@ -202,7 +211,7 @@ document.getElementById('createPlanForm').addEventListener('submit', function(e)
           <h4>Day ${i} in ${city}</h4>
           <ul>
             <li>Hotel: <strong>${hotel}</strong></li>
-            <li>Event: ${event}</li>
+            <li>Event: ${event} <a href="event-details.html" class="btn-small">View Details</a></li>
             <li>Restaurant: ${restaurant}</li>
           </ul>
           <button class="edit-btn btn-small" onclick="editDay(${i})">Edit</button>

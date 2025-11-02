@@ -6,7 +6,6 @@
 <title>رحلة | Journy - Planner</title>
 <link rel="stylesheet" href="style.css">
 <style>
-/* Additions that blend with your existing style.css */
 .planner-section {
   padding: 60px 50px;
   text-align: center;
@@ -56,6 +55,39 @@
 .card h3, .card h4 {
   color: #ff6b00;
 }
+#generatedPlan {
+  margin-top: 40px;
+  display: flex;
+  flex-wrap: wrap; /* allows multiple lines if too many days */
+  justify-content: center;
+  gap: 20px; /* space between cards */
+}
+
+.day-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  width: 220px;
+  text-align: left;
+}
+
+.day-card h4 {
+  color: #ff6b00;
+  margin-bottom: 10px;
+}
+
+.day-card ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #555;
+}
+
+.btn-small {
+  margin-top: 10px;
+  display: inline-block;
+}
+
 </style>
 </head>
 <body>
@@ -88,11 +120,20 @@
         <label for="days">Number of Days:</label>
         <input type="number" id="days" min="1" placeholder="e.g. 3" required>
 
-        <label for="cities">Cities:</label>
-        <input type="text" id="cities" placeholder="e.g. Riyadh, Jeddah" required>
+        <label for="cities">Select Cities:</label>
+        <select id="cities">
+          <option value="Riyadh">Riyadh</option>
+          <option value="Jeddah">Jeddah</option>
+          <option value="Dammam">Dammam</option>
+        </select>
 
         <label for="preferences">Preferences:</label>
-        <input type="text" id="preferences" placeholder="e.g. culture, shopping, food" required>
+        <select id="preferences">
+          <option value="culture">Culture</option>
+          <option value="shopping">Shopping</option>
+          <option value="food">Food</option>
+          <option value="sports">Sports</option>
+        </select>
 
         <button type="submit" class="btn-small">Generate Plan</button>
       </form>
@@ -106,81 +147,104 @@
 <footer>
   <p>&copy; 2025 رحلة | Journy — Designed with love for Saudi Arabia 🇸🇦</p>
 </footer>
+
 <script>
+const hotelOptions = {
+  "Riyadh": ["The Ritz-Carlton Riyadh", "Diriyah Gate Hotel", "Nofa Boutique Resort"],
+  "Jeddah": ["Jeddah Hilton", "W Jeddah", "Rosewood Jeddah"],
+  "Dammam": ["Park Hyatt Dammam", "Sheraton Dammam Hotel & Convention Center", "Novotel Al Khobar"]
+};
+
+const restaurantOptions = {
+  "Riyadh": ["Nozomi Riyadh (Japanese)", "Spazio 77 (Italian fine dining)", "Al Orjouan (Middle Eastern)"],
+  "Jeddah": ["Al-Nakheel (Seafood)", "Toki (Asian Fusion)", "Shababeek (Local favorites)"],
+  "Dammam": ["Bukhara (Indian Cuisine)", "Fusion (Modern international)", "Sushi Yoshi (Japanese)"]
+};
+
+const eventOptions = {
+  "Riyadh": ["National Museum of Saudi Arabia", "Kingdom Center Sky Bridge", "Edge of the World Hike"],
+  "Jeddah": ["Saudi F1 Grand Prix", "Jeddah Corniche Sunset Walk", "Historic Al-Balad Tour"],
+  "Dammam": ["Half Moon Bay Beach Day", "Scitech Museum Exploration", "Marjan Island Outdoor Activities"]
+};
+
+
 document.getElementById('createPlanForm').addEventListener('submit', function(e) {
   e.preventDefault();
 
-  const days = document.getElementById('days').value;
-  const cities = document.getElementById('cities').value;
-  const preferences = document.getElementById('preferences').value;
+  const days = parseInt(document.getElementById('days').value);
+  const city = document.getElementById('cities').value;
+  const preference = document.getElementById('preferences').value;
 
   const formSection = document.getElementById('planForm');
   const introSection = document.getElementById('plannerIntro');
+  const planDiv = document.getElementById('generatedPlan');
 
-  // Fade out the form and intro section
+  // Fade out form and intro
   formSection.style.transition = 'opacity 0.5s ease';
   introSection.style.transition = 'opacity 0.5s ease';
   formSection.style.opacity = '0';
   introSection.style.opacity = '0';
 
-  // After fade-out, fully hide them
   setTimeout(() => {
     formSection.classList.add('hidden');
     formSection.style.display = 'none';
     introSection.classList.add('hidden');
     introSection.style.display = 'none';
 
-    // Show generated plan
-    const planDiv = document.getElementById('generatedPlan');
-    planDiv.innerHTML = `
-      <div class="card">
-        <h3>Your Journey Plan</h3>
-        <p><strong>Days:</strong> ${days}</p>
-        <p><strong>Cities:</strong> ${cities}</p>
-        <p><strong>Preferences:</strong> ${preferences}</p>
-        <h4>Sample Itinerary:</h4>
-        <ul>
-          <li>Day 1: Explore main attractions in ${cities.split(',')[0].trim()}.</li>
-          <li>Day 2: Enjoy experiences based on your interests (${preferences}).</li>
-          <li>Day 3: Relax and capture memories before heading home.</li>
-        </ul>
-        <button class="btn-small" onclick="startOver()">Create Another Plan</button>
-      </div>
-    `;
+    // Generate plan cards
+    let planHTML = '';
+    for (let i = 1; i <= days; i++) {
+      const hotel = hotelOptions[city] ? hotelOptions[city][0] : "No hotel";
+      const restaurant = restaurantOptions[city] ? restaurantOptions[city][0] : "No restaurant";
+      const event = eventOptions[city] ? eventOptions[city][0] : "No event";
+
+      planHTML += `
+        <div class="day-card" id="day-${i}">
+          <h4>Day ${i} in ${city}</h4>
+          <ul>
+            <li>Hotel: <strong>${hotel}</strong></li>
+            <li>Event: ${event}</li>
+            <li>Restaurant: ${restaurant}</li>
+          </ul>
+          <button class="edit-btn" onclick="editDay(${i})">Edit</button>
+          <button class="delete-btn" onclick="deleteDay(${i})">Delete</button>
+        </div>
+      `;
+    }
+
+    planDiv.innerHTML = planHTML;
     planDiv.classList.remove('hidden');
     planDiv.style.opacity = '0';
     planDiv.style.transition = 'opacity 0.5s ease';
-    setTimeout(() => (planDiv.style.opacity = '1'), 50);
+    setTimeout(() => planDiv.style.opacity = '1', 50);
   }, 500);
 });
 
-function startOver() {
-  const planDiv = document.getElementById('generatedPlan');
-  planDiv.classList.add('hidden');
-
-  const formSection = document.getElementById('planForm');
-  const introSection = document.getElementById('plannerIntro');
-
-  document.getElementById('createPlanForm').reset();
-
-  // Show intro and form again
-  introSection.classList.remove('hidden');
-  introSection.style.display = 'block';
-  introSection.style.opacity = '1';
-
-  formSection.classList.remove('hidden');
-  formSection.style.display = 'inline-block';
-  formSection.style.opacity = '1';
-}
 function showForm() {
   const form = document.getElementById('planForm');
   form.classList.remove('hidden');
-  form.style.display = 'inline-block'; // makes it visible
+  form.style.display = 'inline-block';
   form.style.opacity = '1';
   form.scrollIntoView({ behavior: 'smooth' });
 }
 
+function deleteDay(dayNumber) {
+  const dayCard = document.getElementById(`day-${dayNumber}`);
+  if (dayCard) dayCard.remove();
+}
 
+function editDay(dayNumber) {
+  const dayCard = document.getElementById(`day-${dayNumber}`);
+  if (!dayCard) return;
+
+  const newHotel = prompt("Enter hotel:", dayCard.querySelector("li:nth-child(1) strong").innerText);
+  const newEvent = prompt("Enter event:", dayCard.querySelector("li:nth-child(2)").innerText.replace("Event: ", ""));
+  const newRestaurant = prompt("Enter restaurant:", dayCard.querySelector("li:nth-child(3)").innerText.replace("Restaurant: ", ""));
+
+  dayCard.querySelector("li:nth-child(1) strong").innerText = newHotel;
+  dayCard.querySelector("li:nth-child(2)").innerText = "Event: " + newEvent;
+  dayCard.querySelector("li:nth-child(3)").innerText = "Restaurant: " + newRestaurant;
+}
 </script>
 
 </body>

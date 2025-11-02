@@ -1,275 +1,248 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>رحلة | Journy - Planner</title>
-<link rel="stylesheet" href="style.css">
-<style>
-.planner-section {
-  padding: 60px 50px;
-  text-align: center;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planner - My Journeys</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Page Specific Styling */
+    .planner-container {
+      padding: 60px 50px;
+    }
 
-.hidden {
-  display: none;
-}
+    .planner-container h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      margin-bottom: 40px;
+      text-align: center;
+      color: #333;
+    }
 
-#planForm {
-  background: #fff;
-  text-align: left;
-  padding: 30px 40px;
-  margin-top: 30px;
-  border-radius: 10px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-  width: 320px;
-}
+    .journey-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      margin-bottom: 40px;
+      overflow: hidden;
+      transition: 0.3s;
+    }
 
-#planForm label {
-  font-weight: 600;
-  color: #333;
-}
+    .journey-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(255,107,0,0.3);
+    }
 
-#planForm input, #planForm select {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
+    .journey-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 25px;
+      background: #ff6b00;
+      color: #fff;
+    }
 
-#generatedPlan {
-  margin-top: 40px;
-  display: flex;
-  flex-wrap: wrap; /* allows multiple lines if too many days */
-  justify-content: center;
-  gap: 30px; /* slightly more space between cards */
-}
+    .journey-header h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      margin: 0;
+    }
 
-.day-card {
-  background: #fff;
-  padding: 25px 25px;
-  border-radius: 12px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-  width: 300px; /* wider card */
-  text-align: left;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+    .journey-actions {
+      display: flex;
+      gap: 10px;
+    }
 
-.day-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-}
+    .journey-details {
+      display: none;
+      padding: 30px 40px;
+      background: #fdfdfd;
+      position: relative;
+    }
 
-.day-card h4 {
-  color: #ff6b00;
-  margin-bottom: 12px;
-  font-size: 20px;
-}
+    /* Timeline style */
+    .itinerary {
+      position: relative;
+      margin-left: 30px;
+      border-left: 3px solid #ff6b00;
+      padding-left: 20px;
+    }
 
-.day-card ul {
-  margin: 0;
-  padding-left: 20px;
-  color: #555;
-  line-height: 1.5;
-}
+    .itinerary-item {
+      position: relative;
+      margin-bottom: 25px;
+      padding-left: 10px;
+    }
 
+    .itinerary-item::before {
+      content: "";
+      position: absolute;
+      left: -32px;
+      top: 5px;
+      width: 16px;
+      height: 16px;
+      background: #ff6b00;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      box-shadow: 0 0 0 3px rgba(255,107,0,0.2);
+    }
 
-.btn-small {
-  margin-top: 10px;
-  display: inline-block;
-}
+    .itinerary-item h4 {
+      font-size: 18px;
+      color: #ff6b00;
+      margin-bottom: 5px;
+    }
 
-.btn {
-  padding: 10px 20px;
-  background: #ff6b00;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 16px;
-}
+    .itinerary-item p {
+      color: #555;
+      margin: 0;
+      line-height: 1.5;
+    }
 
-.btn:hover {
-  background: #ff8533;
-}
-</style>
+    .time-tag {
+      display: inline-block;
+      background: #ffe7d1;
+      color: #ff6b00;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 20px;
+      padding: 4px 12px;
+      margin-bottom: 6px;
+    }
+
+  </style>
 </head>
 <body>
-<header>
+
+  <header>
   <nav>
-    <div class="logo">رحلة | Journy</div>
+    <div class="logo">Journy</div>
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
-      <li><a href="events.html">Events</a></li>
+      <li><a href="discover.html">Discover</a></li>
       <li><a href="planner.html" class="active">Planner</a></li>
       <li><a href="reservations.html">Reservations</a></li>
-      <li><a href="login.html">Log Out</a></li>
+      <li><a href="login.html">log out</a></li>
     </ul>
   </nav>
 </header>
 
-<main>
-  <section class="planner-section">
-    <div id="plannerIntro">
-      <h2>Plan Your Next Journey</h2>
-      <p>You don’t have a plan yet. Start creating your trip below!</p>
-      <button class="btn" onclick="showForm()">Create New Plan</button><br>
-    </div>
+  <section class="planner-container">
+    <h2>My Journeys</h2>
 
-    <!-- Hidden Form -->
-    <div id="planForm" class="hidden">
-      <h3>Create Your Plan</h3>
-      <form id="createPlanForm">
-        <label for="days">Number of Days:</label>
-        <input type="number" id="days" min="1" placeholder="e.g. 3" required>
-
-        <label for="cities">Select Cities:</label>
-        <select id="cities">
-          <option value="Riyadh">Riyadh</option>
-          <option value="Jeddah">Jeddah</option>
-          <option value="Dammam">Dammam</option>
-        </select>
-
-        <label for="preferences">Preferences:</label>
-        <select id="preferences">
-          <option value="culture">Culture</option>
-          <option value="shopping">Shopping</option>
-          <option value="food">Food</option>
-          <option value="sports">Sports</option>
-        </select>
-
-        <button type="submit" class="btn-small">Generate Plan</button>
-      </form>
-    </div>
-
-    <!-- Generated Plan Display -->
-    <div id="generatedPlan" class="hidden"></div>
-
-    <!-- Accept & Pay Button -->
-    <div id="acceptSection" class="hidden" style="text-align: center; margin-top: 20px;">
-      <button class="btn" onclick="acceptPlan()">Accept & Pay</button>
-    </div>
-  </section>
-</main>
-
-<footer>
-  <p>&copy; 2025 رحلة | Journy — Designed with love for Saudi Arabia 🇸🇦</p>
-</footer>
-
-<script>
-const hotelOptions = {
-  "Riyadh": ["The Ritz-Carlton Riyadh", "Diriyah Gate Hotel", "Nofa Boutique Resort"],
-  "Jeddah": ["Jeddah Hilton", "W Jeddah", "Rosewood Jeddah"],
-  "Dammam": ["Park Hyatt Dammam", "Sheraton Dammam Hotel & Convention Center", "Novotel Al Khobar"]
-};
-
-const restaurantOptions = {
-  "Riyadh": ["Nozomi Riyadh (Japanese)", "Spazio 77 (Italian fine dining)", "Al Orjouan (Middle Eastern)"],
-  "Jeddah": ["Al-Nakheel (Seafood)", "Toki (Asian Fusion)", "Shababeek (Local favorites)"],
-  "Dammam": ["Bukhara (Indian Cuisine)", "Fusion (Modern international)", "Sushi Yoshi (Japanese)"]
-};
-
-const eventOptions = {
-  "Riyadh": ["National Museum of Saudi Arabia", "Kingdom Center Sky Bridge", "Edge of the World Hike"],
-  "Jeddah": ["Saudi F1 Grand Prix", "Jeddah Corniche Sunset Walk", "Historic Al-Balad Tour"],
-  "Dammam": ["Half Moon Bay Beach Day", "Scitech Museum Exploration", "Marjan Island Outdoor Activities"]
-};
-
-document.getElementById('createPlanForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-
-  const days = parseInt(document.getElementById('days').value);
-  const city = document.getElementById('cities').value;
-
-  const formSection = document.getElementById('planForm');
-  const introSection = document.getElementById('plannerIntro');
-  const planDiv = document.getElementById('generatedPlan');
-
-  // Fade out form and intro
-  formSection.style.transition = 'opacity 0.5s ease';
-  introSection.style.transition = 'opacity 0.5s ease';
-  formSection.style.opacity = '0';
-  introSection.style.opacity = '0';
-
-  setTimeout(() => {
-    formSection.classList.add('hidden');
-    formSection.style.display = 'none';
-    introSection.classList.add('hidden');
-    introSection.style.display = 'none';
-
-    // Generate plan cards
-    let planHTML = '';
-    for (let i = 1; i <= days; i++) {
-      const hotel = hotelOptions[city] ? hotelOptions[city][0] : "No hotel";
-      const restaurant = restaurantOptions[city] ? restaurantOptions[city][0] : "No restaurant";
-      const event = eventOptions[city] ? eventOptions[city][0] : "No event";
-
-      planHTML += `
-        <div class="day-card" id="day-${i}">
-          <h4>Day ${i} in ${city}</h4>
-          <ul>
-            <li>Hotel: <strong>${hotel}</strong></li>
-            <li>Event: ${event} <a href="event-details.html" class="btn-small">View Details</a></li>
-            <li>Restaurant: ${restaurant}</li>
-          </ul>
-          <button class="edit-btn btn-small" onclick="editDay(${i})">Edit</button>
-          <button class="delete-btn btn-small" onclick="deleteDay(${i})">Delete</button>
+    <!-- Journey 1 -->
+    <div class="journey-card">
+      <div class="journey-header">
+        <h3>Noor Riyadh Art Getaway</h3>
+        <div class="journey-actions">
+          <button class="btn-small view-btn">View</button>
+          <button class="btn-small edit-btn">Edit</button>
         </div>
-      `;
-    }
+      </div>
+      <div class="journey-details">
+        <div class="itinerary">
+          <div class="itinerary-item">
+            <span class="time-tag">Nov 20, 2025 - 2:00 PM</span>
+            <h4>Check-in: Hilton Riyadh Hotel & Residences</h4>
+            <p>Begin your art journey in luxury. Enjoy the spa and rooftop views before exploring Riyadh’s light festival.</p>
+          </div>
+          <div class="itinerary-item">
+            <span class="time-tag">Nov 20, 2025 - 7:00 PM</span>
+            <h4>Event: Noor Riyadh Festival</h4>
+            <p>Experience mesmerizing light installations and interactive displays spread across the city — a must-see cultural event.</p>
+          </div>
+          <div class="itinerary-item">
+            <span class="time-tag">Nov 21, 2025 - 8:00 PM</span>
+            <h4>Dinner: Carbone Riyadh</h4>
+            <p>Dine at the elegant Carbone Riyadh for Italian-American classics in a stylish setting to close out your artistic day.</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    planDiv.innerHTML = planHTML;
-    planDiv.classList.remove('hidden');
-    planDiv.style.opacity = '0';
-    planDiv.style.transition = 'opacity 0.5s ease';
-    setTimeout(() => planDiv.style.opacity = '1', 50);
+    <!-- Journey 2 -->
+    <div class="journey-card">
+      <div class="journey-header">
+        <h3>Riyadh Comedy Weekend</h3>
+        <div class="journey-actions">
+          <button class="btn-small view-btn">View</button>
+          <button class="btn-small edit-btn">Edit</button>
+        </div>
+      </div>
+      <div class="journey-details">
+        <div class="itinerary">
+          <div class="itinerary-item">
+            <span class="time-tag">Dec 5, 2025 - 1:00 PM</span>
+            <h4>Check-in: Riyadh Marriott Hotel</h4>
+            <p>Stay in the heart of Riyadh’s downtown district, close to the Boulevard City entertainment area.</p>
+          </div>
+          <div class="itinerary-item">
+            <span class="time-tag">Dec 5, 2025 - 6:00 PM</span>
+            <h4>Event: Riyadh Comedy Festival</h4>
+            <p>Laugh the night away with international stand-up acts and local comedians performing live in Boulevard City.</p>
+          </div>
+          <div class="itinerary-item">
+            <span class="time-tag">Dec 6, 2025 - 9:00 PM</span>
+            <h4>Dinner: Al Orjouan</h4>
+            <p>End your trip with a fine dining buffet featuring international cuisine in a luxurious, family-friendly atmosphere.</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    // Show Accept & Pay button
-    const acceptSection = document.getElementById('acceptSection');
-    acceptSection.classList.remove('hidden');
-    acceptSection.style.opacity = '0';
-    acceptSection.style.transition = 'opacity 0.5s ease';
-    setTimeout(() => acceptSection.style.opacity = '1', 50);
+    <!-- Journey 3 -->
+    <div class="journey-card">
+      <div class="journey-header">
+        <h3>Esports World Cup Experience</h3>
+        <div class="journey-actions">
+          <button class="btn-small view-btn">View</button>
+          <button class="btn-small edit-btn">Edit</button>
+        </div>
+      </div>
+      <div class="journey-details">
+        <div class="itinerary">
+          <div class="itinerary-item">
+            <span class="time-tag">Aug 10, 2025 - 3:00 PM</span>
+            <h4>Check-in: Joudyan Hotel Olaya</h4>
+            <p>Stay in the central Olaya district for quick access to gaming venues, restaurants, and shopping areas.</p>
+          </div>
+          <div class="itinerary-item">
+            <span class="time-tag">Aug 11, 2025 - 12:00 PM</span>
+            <h4>Event: Esports World Cup</h4>
+            <p>Witness the world’s best gamers compete for massive prizes in this global esports tournament hosted in Riyadh.</p>
+          </div>
+          <div class="itinerary-item">
+            <span class="time-tag">Aug 11, 2025 - 8:30 PM</span>
+            <h4>Dinner: Hōchō Riyadh</h4>
+            <p>Relax after the competition with a refined Japanese dining experience at VIA Riyadh’s modern culinary hotspot.</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  }, 500);
-});
+  </section>
 
-function showForm() {
-  const form = document.getElementById('planForm');
-  form.classList.remove('hidden');
-  form.style.display = 'inline-block';
-  form.style.opacity = '1';
-  form.scrollIntoView({ behavior: 'smooth' });
-}
+  <footer>
+    <p>&copy; 2025 TravelPlanner. All rights reserved.</p>
+  </footer>
 
-function deleteDay(dayNumber) {
-  const dayCard = document.getElementById(`day-${dayNumber}`);
-  if (dayCard) dayCard.remove();
-}
+  <script>
+    // Toggle itinerary visibility
+    document.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const details = btn.parentElement.parentElement.nextElementSibling;
+        const isOpen = details.style.display === 'block';
+        details.style.display = isOpen ? 'none' : 'block';
+        btn.textContent = isOpen ? 'View' : 'Hide';
+      });
+    });
 
-function editDay(dayNumber) {
-  const dayCard = document.getElementById(`day-${dayNumber}`);
-  if (!dayCard) return;
-
-  const newHotel = prompt("Enter hotel:", dayCard.querySelector("li:nth-child(1) strong").innerText);
-  const newEvent = prompt("Enter event:", dayCard.querySelector("li:nth-child(2)").innerText.replace("Event: ", ""));
-  const newRestaurant = prompt("Enter restaurant:", dayCard.querySelector("li:nth-child(3)").innerText.replace("Restaurant: ", ""));
-
-  dayCard.querySelector("li:nth-child(1) strong").innerText = newHotel;
-  dayCard.querySelector("li:nth-child(2)").innerText = "Event: " + newEvent;
-  dayCard.querySelector("li:nth-child(3)").innerText = "Restaurant: " + newRestaurant;
-}
-
-function acceptPlan() {
-  // Optional: summarize plan before payment
-  const dayCards = document.querySelectorAll('.day-card');
-  let summary = "payment successful !";
-  alert(summary);
-
-}
-</script>
-
+    // Placeholder Edit Button functionality
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        alert('Edit feature coming soon!');
+      });
+    });
+  </script>
 </body>
 </html>

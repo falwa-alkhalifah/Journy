@@ -1,10 +1,62 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>رحلة | Journy - Planner</title>
 <link rel="stylesheet" href="style.css">
+<style>
+/* Additions that blend with your existing style.css */
+.planner-section {
+  padding: 60px 50px;
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
+#planForm {
+  background: #fff;
+  text-align: left;
+  padding: 30px 40px;
+  margin-top: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  width: 320px;
+}
+
+
+#planForm label {
+  font-weight: 600;
+  color: #333;
+}
+
+#planForm input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+#generatedPlan {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.card ul {
+  text-align: left;
+  margin: 15px;
+  color: #555;
+}
+
+.card h3, .card h4 {
+  color: #ff6b00;
+}
+</style>
 </head>
 <body>
 <header>
@@ -22,62 +74,114 @@
 
 <main>
   <section class="planner-section">
-    <h2>Your Itineraries</h2>
-    <p>Select an itinerary to view or edit your trip details.</p>
+    <div id="plannerIntro">
+    <h2>Plan Your Next Journey</h2>
+    <p>You don’t have a plan yet. Start creating your trip below!</p>
 
-    <div id="itineraryList" class="planner-cards">
-      <div class="card">
-        <h3>Itinerary 1</h3>
-        <p>3-day Riyadh trip with events and landmarks.</p>
-        <button class="view-btn" onclick="viewItinerary('1')">View</button>
-      </div>
-      <div class="card">
-        <h3>Itinerary 2</h3>
-        <p>Weekend getaway in Jeddah with cultural stops.</p>
-        <button class="view-btn" onclick="viewItinerary('2')">View</button>
-      </div>
-      <div class="card">
-        <h3>Itinerary 3</h3>
-        <p>Eastern Province food and beach experience.</p>
-        <button class="view-btn" onclick="viewItinerary('3')">View</button>
-      </div>
+    <!-- Create Plan Button -->
+    <button class="btn" onclick="showForm()">Create New Plan</button><br>
+    </div>
+    <!-- Hidden Form -->
+    <div id="planForm" class="hidden">
+      <h3>Create Your Plan</h3>
+      <form id="createPlanForm">
+        <label for="days">Number of Days:</label>
+        <input type="number" id="days" min="1" placeholder="e.g. 3" required>
+
+        <label for="cities">Cities:</label>
+        <input type="text" id="cities" placeholder="e.g. Riyadh, Jeddah" required>
+
+        <label for="preferences">Preferences:</label>
+        <input type="text" id="preferences" placeholder="e.g. culture, shopping, food" required>
+
+        <button type="submit" class="btn-small">Generate Plan</button>
+      </form>
     </div>
 
-    <!-- Individual itinerary details (hidden until viewed) -->
-    <div id="itineraryView" class="itinerary-view hidden">
-      <button class="back-btn" onclick="goBack()">← Back</button>
-      <h3 id="itineraryTitle">Itinerary Details</h3>
-      <div class="itinerary-detail-card">
-        <h4>Day 1: Riyadh Season Concert</h4>
-        <p>Date: March 15, 2026</p>
-        <p>Location: Boulevard Riyadh City</p>
-        <button class="btn-small edit">Edit</button>
-      </div>
-      <div class="itinerary-detail-card">
-        <h4>Day 2: Nofa Resort Stay</h4>
-        <p>Check-in: March 16, 2026</p>
-        <p>Check-out: March 17, 2026</p>
-        <button class="btn-small edit">Edit</button>
-      </div>
-    </div>
+    <!-- Generated Plan Display -->
+    <div id="generatedPlan" class="hidden"></div>
   </section>
 </main>
 
 <footer>
   <p>&copy; 2025 رحلة | Journy — Designed with love for Saudi Arabia 🇸🇦</p>
 </footer>
-
 <script>
-function viewItinerary(num) {
-  document.getElementById('itineraryList').classList.add('hidden');
-  document.getElementById('itineraryView').classList.remove('hidden');
-  document.getElementById('itineraryTitle').textContent = "Itinerary " + num + " Details";
+document.getElementById('createPlanForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const days = document.getElementById('days').value;
+  const cities = document.getElementById('cities').value;
+  const preferences = document.getElementById('preferences').value;
+
+  const formSection = document.getElementById('planForm');
+  const introSection = document.getElementById('plannerIntro');
+
+  // Fade out the form and intro section
+  formSection.style.transition = 'opacity 0.5s ease';
+  introSection.style.transition = 'opacity 0.5s ease';
+  formSection.style.opacity = '0';
+  introSection.style.opacity = '0';
+
+  // After fade-out, fully hide them
+  setTimeout(() => {
+    formSection.classList.add('hidden');
+    formSection.style.display = 'none';
+    introSection.classList.add('hidden');
+    introSection.style.display = 'none';
+
+    // Show generated plan
+    const planDiv = document.getElementById('generatedPlan');
+    planDiv.innerHTML = `
+      <div class="card">
+        <h3>Your Journey Plan</h3>
+        <p><strong>Days:</strong> ${days}</p>
+        <p><strong>Cities:</strong> ${cities}</p>
+        <p><strong>Preferences:</strong> ${preferences}</p>
+        <h4>Sample Itinerary:</h4>
+        <ul>
+          <li>Day 1: Explore main attractions in ${cities.split(',')[0].trim()}.</li>
+          <li>Day 2: Enjoy experiences based on your interests (${preferences}).</li>
+          <li>Day 3: Relax and capture memories before heading home.</li>
+        </ul>
+        <button class="btn-small" onclick="startOver()">Create Another Plan</button>
+      </div>
+    `;
+    planDiv.classList.remove('hidden');
+    planDiv.style.opacity = '0';
+    planDiv.style.transition = 'opacity 0.5s ease';
+    setTimeout(() => (planDiv.style.opacity = '1'), 50);
+  }, 500);
+});
+
+function startOver() {
+  const planDiv = document.getElementById('generatedPlan');
+  planDiv.classList.add('hidden');
+
+  const formSection = document.getElementById('planForm');
+  const introSection = document.getElementById('plannerIntro');
+
+  document.getElementById('createPlanForm').reset();
+
+  // Show intro and form again
+  introSection.classList.remove('hidden');
+  introSection.style.display = 'block';
+  introSection.style.opacity = '1';
+
+  formSection.classList.remove('hidden');
+  formSection.style.display = 'inline-block';
+  formSection.style.opacity = '1';
+}
+function showForm() {
+  const form = document.getElementById('planForm');
+  form.classList.remove('hidden');
+  form.style.display = 'inline-block'; // makes it visible
+  form.style.opacity = '1';
+  form.scrollIntoView({ behavior: 'smooth' });
 }
 
-function goBack() {
-  document.getElementById('itineraryList').classList.remove('hidden');
-  document.getElementById('itineraryView').classList.add('hidden');
-}
+
 </script>
+
 </body>
 </html>

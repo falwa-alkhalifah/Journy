@@ -25,13 +25,12 @@
   width: 320px;
 }
 
-
 #planForm label {
   font-weight: 600;
   color: #333;
 }
 
-#planForm input {
+#planForm input, #planForm select {
   width: 100%;
   padding: 8px;
   margin-top: 5px;
@@ -40,21 +39,6 @@
   border-radius: 6px;
 }
 
-#generatedPlan {
-  margin-top: 40px;
-  display: flex;
-  justify-content: center;
-}
-
-.card ul {
-  text-align: left;
-  margin: 15px;
-  color: #555;
-}
-
-.card h3, .card h4 {
-  color: #ff6b00;
-}
 #generatedPlan {
   margin-top: 40px;
   display: flex;
@@ -88,6 +72,19 @@
   display: inline-block;
 }
 
+.btn {
+  padding: 10px 20px;
+  background: #ff6b00;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn:hover {
+  background: #ff8533;
+}
 </style>
 </head>
 <body>
@@ -107,12 +104,11 @@
 <main>
   <section class="planner-section">
     <div id="plannerIntro">
-    <h2>Plan Your Next Journey</h2>
-    <p>You don’t have a plan yet. Start creating your trip below!</p>
-
-    <!-- Create Plan Button -->
-    <button class="btn" onclick="showForm()">Create New Plan</button><br>
+      <h2>Plan Your Next Journey</h2>
+      <p>You don’t have a plan yet. Start creating your trip below!</p>
+      <button class="btn" onclick="showForm()">Create New Plan</button><br>
     </div>
+
     <!-- Hidden Form -->
     <div id="planForm" class="hidden">
       <h3>Create Your Plan</h3>
@@ -141,6 +137,11 @@
 
     <!-- Generated Plan Display -->
     <div id="generatedPlan" class="hidden"></div>
+
+    <!-- Accept & Pay Button -->
+    <div id="acceptSection" class="hidden" style="text-align: center; margin-top: 20px;">
+      <button class="btn" onclick="acceptPlan()">Accept & Pay</button>
+    </div>
   </section>
 </main>
 
@@ -167,13 +168,11 @@ const eventOptions = {
   "Dammam": ["Half Moon Bay Beach Day", "Scitech Museum Exploration", "Marjan Island Outdoor Activities"]
 };
 
-
 document.getElementById('createPlanForm').addEventListener('submit', function(e) {
   e.preventDefault();
 
   const days = parseInt(document.getElementById('days').value);
   const city = document.getElementById('cities').value;
-  const preference = document.getElementById('preferences').value;
 
   const formSection = document.getElementById('planForm');
   const introSection = document.getElementById('plannerIntro');
@@ -206,8 +205,8 @@ document.getElementById('createPlanForm').addEventListener('submit', function(e)
             <li>Event: ${event}</li>
             <li>Restaurant: ${restaurant}</li>
           </ul>
-          <button class="edit-btn" onclick="editDay(${i})">Edit</button>
-          <button class="delete-btn" onclick="deleteDay(${i})">Delete</button>
+          <button class="edit-btn btn-small" onclick="editDay(${i})">Edit</button>
+          <button class="delete-btn btn-small" onclick="deleteDay(${i})">Delete</button>
         </div>
       `;
     }
@@ -217,6 +216,14 @@ document.getElementById('createPlanForm').addEventListener('submit', function(e)
     planDiv.style.opacity = '0';
     planDiv.style.transition = 'opacity 0.5s ease';
     setTimeout(() => planDiv.style.opacity = '1', 50);
+
+    // Show Accept & Pay button
+    const acceptSection = document.getElementById('acceptSection');
+    acceptSection.classList.remove('hidden');
+    acceptSection.style.opacity = '0';
+    acceptSection.style.transition = 'opacity 0.5s ease';
+    setTimeout(() => acceptSection.style.opacity = '1', 50);
+
   }, 500);
 });
 
@@ -244,6 +251,14 @@ function editDay(dayNumber) {
   dayCard.querySelector("li:nth-child(1) strong").innerText = newHotel;
   dayCard.querySelector("li:nth-child(2)").innerText = "Event: " + newEvent;
   dayCard.querySelector("li:nth-child(3)").innerText = "Restaurant: " + newRestaurant;
+}
+
+function acceptPlan() {
+  // Optional: summarize plan before payment
+  const dayCards = document.querySelectorAll('.day-card');
+  let summary = "payment successful !";
+  alert(summary);
+
 }
 </script>
 

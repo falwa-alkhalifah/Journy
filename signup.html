@@ -1,11 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Journy - Sign Up</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Journy - Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .auth-page{min-height:70vh; display:flex; justify-content:center; align-items:center; padding:60px 20px;}
+    .auth-card{width:100%; max-width:520px; background:#fff; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.1); overflow:hidden;}
+    .auth-head{padding:22px 26px; border-bottom:1px solid #eee;}
+    .auth-head h2{font-family:'Playfair Display',serif; font-size:28px; color:#333;}
+    .auth-body{padding:22px 26px; display:grid; gap:14px;}
+    .form-group{display:grid; gap:6px;}
+    .form-group label{font-weight:600; color:#333;}
+    .form-control{padding:12px 14px; border:1px solid #ddd; border-radius:8px; font-size:15px; outline:none; width:100%;}
+    .form-control:focus{border-color:#ff6b00; box-shadow:0 0 0 3px rgba(255,107,0,0.12);}
+    .helper{font-size:13px; color:#777;}
+    .error{color:#d33; font-size:13px; min-height:1em;}
+    .auth-actions{display:grid; gap:12px; margin-top:6px;}
+    .btn:disabled{opacity:.6; cursor:not-allowed;}
+    nav .nav-links li a.active{color:#ff6b00;}
+  </style>
 </head>
 <body>
 <header>
@@ -19,26 +35,99 @@
 </header>
 
 <main>
-  <section class="auth-section">
-    <h2>Create a Journy Account</h2>
-    <form>
-      <label for="name">Full Name:</label>
-      <input type="text" id="name" placeholder="Enter your name" required>
+  <section class="auth-page">
+    <div class="auth-card">
+      <div class="auth-head">
+        <h2>Create a Journy Account</h2>
+      </div>
+      <form class="auth-body" id="signupForm" novalidate>
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input class="form-control" type="text" id="name" placeholder="Enter your name" autocomplete="name" required>
+          <div class="error" id="nameErr"></div>
+        </div>
 
-      <label for="email">Email:</label>
-      <input type="email" id="email" placeholder="Enter your email" required>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input class="form-control" type="email" id="email" placeholder="Enter your email" autocomplete="email" required>
+          <div class="error" id="emailErr"></div>
+        </div>
 
-      <label for="password">Password:</label>
-      <input type="password" id="password" placeholder="Create a password" required>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input class="form-control" type="password" id="password" placeholder="Create a password" minlength="8" required>
+          <div class="helper">At least 8 characters.</div>
+          <div class="error" id="passErr"></div>
+        </div>
 
-      <button type="submit" class="btn">Sign Up</button>
-      <p>Already have an account? <a href="login.html">Login</a></p>
-    </form>
+        <div class="form-group">
+          <label for="confirm">Confirm Password</label>
+          <input class="form-control" type="password" id="confirm" placeholder="Re-enter your password" minlength="8" required>
+          <div class="error" id="confirmErr"></div>
+        </div>
+
+        <div class="form-group" style="display:flex;align-items:center;gap:8px;">
+          <input type="checkbox" id="terms" required>
+          <label for="terms" style="font-weight:500;">I agree to the <a href="#" class="link-inline" style="color:#ff6b00;">Terms & Privacy</a></label>
+        </div>
+        <div class="error" id="termsErr"></div>
+
+        <div class="auth-actions">
+          <button type="submit" class="btn" id="signupBtn" disabled>Sign Up</button>
+          <p class="helper">Already have an account? <a class="link-inline" href="login.html" style="color:#ff6b00;">Login</a></p>
+        </div>
+      </form>
+    </div>
   </section>
 </main>
 
 <footer>
   <p>&copy; 2025 Journy. All rights reserved.</p>
 </footer>
+
+<script>
+  (function(){
+    const f = document.getElementById('signupForm');
+    const nameI = document.getElementById('name');
+    const emailI = document.getElementById('email');
+    const passI = document.getElementById('password');
+    const confI = document.getElementById('confirm');
+    const terms = document.getElementById('terms');
+    const btn = document.getElementById('signupBtn');
+
+    const nameErr = document.getElementById('nameErr');
+    const emailErr = document.getElementById('emailErr');
+    const passErr = document.getElementById('passErr');
+    const confirmErr = document.getElementById('confirmErr');
+    const termsErr = document.getElementById('termsErr');
+
+    function validate(){
+      let ok = true;
+
+      if(!nameI.value.trim()){ nameErr.textContent='Please enter your full name.'; ok=false; } else { nameErr.textContent=''; }
+      const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if(!emailI.value.trim()){ emailErr.textContent='Please enter your email.'; ok=false; }
+      else if(!emailRx.test(emailI.value)){ emailErr.textContent='Invalid email format.'; ok=false; }
+      else { emailErr.textContent=''; }
+
+      if(!passI.value || passI.value.length<8){ passErr.textContent='Password must be at least 8 characters.'; ok=false; } else { passErr.textContent=''; }
+      if(confI.value!==passI.value){ confirmErr.textContent='Passwords do not match.'; ok=false; } else { confirmErr.textContent=''; }
+
+      if(!terms.checked){ termsErr.textContent='You must agree to the Terms & Privacy.'; ok=false; } else { termsErr.textContent=''; }
+
+      btn.disabled = !ok;
+      return ok;
+    }
+
+    [nameI,emailI,passI,confI,terms].forEach(el=>el.addEventListener('input',validate));
+    f.addEventListener('submit', e=>{
+      e.preventDefault();
+      if(!validate()) return;
+      btn.textContent='Creating account...';
+      btn.disabled=true;
+      setTimeout(()=>{ alert('Account created (frontend demo).'); window.location.href='login.html'; },700);
+    });
+  })();
+</script>
 </body>
 </html>

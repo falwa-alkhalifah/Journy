@@ -7,14 +7,30 @@
 <link rel="stylesheet" href="style.css">
 
 <style>
-/* Extra styles specific to reservations page */
+/* Minimal additions (not in your main style.css) */
+
+/* Reservations layout */
+.reservations-section {
+  width: 90%;
+  max-width: 900px;
+  margin: 60px auto;
+}
+
+/* Section title */
+.section-title {
+  color: #ff6b00;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.7rem;
+  margin-bottom: 20px;
+  border-left: 4px solid #ff6b00;
+  padding-left: 10px;
+}
+
+/* Reservation cards */
 .reservations-container {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 90%;
-  max-width: 900px;
-  margin: 0 auto 60px;
 }
 .res-card {
   display: flex;
@@ -28,7 +44,7 @@
 }
 .res-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 6px 20px rgba(255,107,0,0.3);
+  box-shadow: 0 8px 20px rgba(255,107,0,0.3);
 }
 .res-info h3 {
   font-family: 'Playfair Display', serif;
@@ -44,7 +60,7 @@
   gap: 10px;
 }
 .res-actions button {
-  padding: 8px 14px;
+  padding: 8px 18px;
   border: none;
   border-radius: 5px;
   color: #fff;
@@ -52,17 +68,8 @@
   cursor: pointer;
   transition: 0.3s;
 }
-.pay-btn { background-color: #28a745; }
-.confirm-btn { background-color: #007bff; }
-.cancel-btn { background-color: #dc3545; }
 .res-actions button:hover { opacity: 0.9; }
-
-.empty-message {
-  text-align: center;
-  color: #555;
-  margin-top: 50px;
-  font-size: 1.1rem;
-}
+.cancel-btn { background-color: #dc3545; }
 
 /* Search bar */
 .search-section {
@@ -75,6 +82,14 @@
   max-width: 500px;
   border-radius: 5px;
   border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+/* Empty message */
+.empty-message {
+  text-align: center;
+  color: #555;
+  margin-top: 40px;
   font-size: 1rem;
 }
 </style>
@@ -95,51 +110,89 @@
 </header>
 
 <main>
+  <!-- Search -->
   <section class="search-section">
     <input type="text" id="searchInput" placeholder="Search reservations...">
   </section>
 
-  <section class="reservations-container" id="reservationsContainer">
-    <!-- Example reservations -->
-    <div class="res-card">
-      <div class="res-info">
+  <!-- Confirmed Reservations -->
+  <section class="reservations-section">
+    <h2 class="section-title">✅ Confirmed Reservations</h2>
+    <div class="reservations-container" id="confirmedReservations">
+      <div class="res-card">
+        <div class="res-info">
         <h3>Ritz-Carlton Hotel</h3>
-        <p>Riyadh | Check-in: Dec 10, 2025</p>
-        <p>Amount Due: 1200 SAR</p>
+        <p>Location: Riyadh</p>
+        <p>Check-in: Dec 10, 2025</p>
+        <p>Stay: 3 Nights</p>
+        <p>Total Paid: 1200 SAR</p>
+        <p>Status: ✅ Confirmed & Paid</p>
+        </div>
+        <div class="res-actions">
+          <button class="cancel-btn">Cancel</button>
+        </div>
       </div>
-      <div class="res-actions">
-        <button onclick="reserveTickets()" style="background-color:#ff6b00;color:white;border:none;border-radius:8px;font-size:17px;padding:14px 35px;cursor:pointer;">Reserve Now</button>
-        <button class="cancel-btn">Cancel</button>
-      </div>
-    </div>
 
-    <div class="res-card">
-      <div class="res-info">
-        <h3>AlUla Culture Event</h3>
-        <p>AlUla | Jan 12, 2026</p>
-        <p>Reservation Required</p>
-      </div>
-      <div class="res-actions">
-        <button onclick="reserveTickets()" style="background-color:#ff6b00;color:white;border:none;border-radius:8px;font-size:17px;padding:14px 35px;cursor:pointer;">Reserve Now</button>
-        <button class="cancel-btn">Cancel</button>
-      </div>
-    </div>
-
-    <div class="res-card">
-      <div class="res-info">
+      <div class="res-card">
+        <div class="res-info">
         <h3>Maraya Social Restaurant</h3>
-        <p>AlUla | Dinner for 2 | Jan 13, 2026</p>
-        <p>Amount Due: 450 SAR</p>
+        <p>Location: AlUla</p>
+        <p>Date: Jan 13, 2026</p>
+        <p>Guests: 2</p>
+        <p>Total Paid: 450 SAR</p>
+        <p>Status: ✅ Confirmed & Paid</p>
+        </div>
+        <div class="res-actions">
+          <button class="cancel-btn">Cancel</button>
+        </div>
       </div>
-      <div class="res-actions">
-        <button onclick="reserveTickets()" style="background-color:#ff6b00;color:white;border:none;border-radius:8px;font-size:17px;padding:14px 35px;cursor:pointer;">Reserve Now</button>
-        <button class="cancel-btn">Cancel</button>
+    </div>
+  </section>
+
+  <!-- Pending Reservations -->
+  <section class="reservations-section">
+    <h2 class="section-title">💳 Pending Reservations</h2>
+    <div class="reservations-container" id="pendingReservations">
+      <div class="res-card">
+        <div class="res-info">
+          <h3>Ritz-Carlton Hotel</h3>
+          <p>Riyadh | Check-in: Dec 10, 2025</p>
+          <p>Amount Due: 1200 SAR</p>
+        </div>
+        <div class="res-actions">
+          <button class="btn-small" onclick="goToEventDetails()">Reserve Now</button>
+          <button class="cancel-btn">Cancel</button>
+        </div>
+      </div>
+
+      <div class="res-card">
+        <div class="res-info">
+          <h3>AlUla Culture Event</h3>
+          <p>AlUla | Jan 12, 2026</p>
+          <p>Reservation Required</p>
+        </div>
+        <div class="res-actions">
+          <button class="btn-small" onclick="goToEventDetails()">Reserve Now</button>
+          <button class="cancel-btn">Cancel</button>
+        </div>
+      </div>
+
+      <div class="res-card">
+        <div class="res-info">
+          <h3>Maraya Social Restaurant</h3>
+          <p>AlUla | Dinner for 2 | Jan 13, 2026</p>
+          <p>Amount Due: 450 SAR</p>
+        </div>
+        <div class="res-actions">
+          <button class="btn-small" onclick="goToEventDetails()">Reserve Now</button>
+          <button class="cancel-btn">Cancel</button>
+        </div>
       </div>
     </div>
   </section>
 
   <p class="empty-message" id="emptyMessage" style="display:none;">
-    You don’t have any pending reservations right now.
+    You don’t have any reservations at the moment.
   </p>
 </main>
 
@@ -150,14 +203,14 @@
 <script>
 // ===== Search functionality =====
 const searchInput = document.getElementById('searchInput');
-const reservations = document.querySelectorAll('.res-card');
+const allCards = document.querySelectorAll('.res-card');
 const emptyMessage = document.getElementById('emptyMessage');
 
 searchInput.addEventListener('keyup', () => {
   const filter = searchInput.value.toLowerCase();
   let visibleCount = 0;
 
-  reservations.forEach(card => {
+  allCards.forEach(card => {
     const title = card.querySelector('h3').textContent.toLowerCase();
     const desc = card.querySelector('p').textContent.toLowerCase();
     if (title.includes(filter) || desc.includes(filter)) {
@@ -171,12 +224,10 @@ searchInput.addEventListener('keyup', () => {
   emptyMessage.style.display = visibleCount === 0 ? 'block' : 'none';
 });
 
-// ===== Redirect on reserve button click =====
-function reserveTickets() {
+// ===== Redirect function =====
+function goToEventDetails() {
   window.location.href = "event-details.html";
 }
 </script>
-
-
 </body>
 </html>

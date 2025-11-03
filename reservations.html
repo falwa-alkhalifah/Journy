@@ -5,42 +5,63 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Journy - Reservations</title>
 <link rel="stylesheet" href="style.css">
+
 <style>
-  
-/* General carousel and cards styles */
-.cards-row {
+/* Extra styles specific to reservations page */
+.reservations-container {
   display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  scroll-behavior: smooth;
+  flex-direction: column;
   gap: 20px;
-  justify-content: flex-start; 
+  width: 90%;
+  max-width: 900px;
+  margin: 0 auto 60px;
 }
-.cards-row::-webkit-scrollbar { display: none; }
-.card {
-  min-width: 250px;
-  flex: 0 0 auto;
-  border: 1px solid #ddd;
-  border-radius: 10px;
+.res-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background: #fff;
-  text-align: center;
+  border-radius: 10px;
+  padding: 15px 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  transition: 0.3s;
 }
-.card img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
+.res-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(255,107,0,0.3);
 }
-.card h3 { margin: 10px 0 5px; font-size: 1.1rem; }
-.card p { font-size: 0.9rem; color: #555; }
-.btn-small {
-  display: inline-block;
-  margin: 10px 0 15px;
-  padding: 5px 12px;
-  color: #fff;
+.res-info h3 {
+  font-family: 'Playfair Display', serif;
+  color: #ff6b00;
+  margin-bottom: 5px;
+}
+.res-info p {
+  color: #555;
+  font-size: 0.9rem;
+}
+.res-actions {
+  display: flex;
+  gap: 10px;
+}
+.res-actions button {
+  padding: 8px 14px;
   border: none;
   border-radius: 5px;
-  text-decoration: none;
+  color: #fff;
+  font-weight: 500;
   cursor: pointer;
+  transition: 0.3s;
+}
+.pay-btn { background-color: #28a745; }
+.confirm-btn { background-color: #007bff; }
+.cancel-btn { background-color: #dc3545; }
+.res-actions button:hover { opacity: 0.9; }
+
+.empty-message {
+  text-align: center;
+  color: #555;
+  margin-top: 50px;
+  font-size: 1.1rem;
 }
 
 /* Search bar */
@@ -56,22 +77,9 @@
   border: 1px solid #ccc;
   font-size: 1rem;
 }
-
-header {
-  border-bottom: none; 
-}
-nav {
-  border-bottom: none; 
-}
-.nav-links li a {
-  border-bottom: none !important;
-}
-.nav-links li a.active {
-  border-bottom: none !important;
-}
-
 </style>
 </head>
+
 <body>
 <header>
   <nav>
@@ -81,57 +89,58 @@ nav {
       <li><a href="discover.html">Discover</a></li>
       <li><a href="planner.html">Planner</a></li>
       <li><a href="reservations.html" class="active">Reservations</a></li>
-      <li><a href="login.html">log out</a></li>
+      <li><a href="login.html">Log Out</a></li>
     </ul>
   </nav>
 </header>
 
 <main>
   <section class="search-section">
-    <input type="text" id="searchInput" placeholder="Search events, hotels, or restaurants...">
+    <input type="text" id="searchInput" placeholder="Search reservations...">
   </section>
 
-  <section class="featured-events">
-    <h2>My Reservations</h2>
-    <div class="carousel-container">
-      <div class="cards-row" id="reservations-row">
-        <div class="card"><img src="image/MDLBEAST.jpg" alt=""><h3>Riyadh Music Festival</h3><p>March 15, 2026 | 2 Tickets</p><a href="event-details.html" class="btn-small">View Details</a></div>
-        <div class="card"><img src="image/Formula.jpg" alt=""><h3>Formula 1 Grand Prix</h3><p>April 2, 2026 | 3 Tickets</p><a href="event-details.html" class="btn-small">View Details</a></div>
-        <div class="card"><img src="image/boulevardw.jpg" alt=""><h3>Boulevard World</h3><p>Dec 5-25, 2025 | Riyadh</p><a href="event-details.html" class="btn-small">View Details</a></div>
-        <div class="card"><img src="image/AlUla.png" alt=""><h3>AlUla Culture Week</h3><p>Jan 10, 2026 | AlUla</p><a href="event-details.html" class="btn-small">View Details</a></div>
-        <div class="card"><img src="image/Bujairi.png" alt=""><h3>AL-Bujairi</h3><p>July 12, 2026 | Riyadh</p><a href="event-details.html" class="btn-small">View Details</a></div>
-        <div class="card"><img src="image/Boulevardc.jpeg" alt=""><h3>Boulevard city</h3><p>Dec 18, 2025 | Jeddah</p><a href="event-details.html" class="btn-small">View Details</a></div>
+  <section class="reservations-container" id="reservationsContainer">
+    <!-- Example reservations -->
+    <div class="res-card">
+      <div class="res-info">
+        <h3>Ritz-Carlton Hotel</h3>
+        <p>Riyadh | Check-in: Dec 10, 2025</p>
+        <p>Amount Due: 1200 SAR</p>
+      </div>
+      <div class="res-actions">
+        <button onclick="reserveTickets()" style="background-color:#ff6b00;color:white;border:none;border-radius:8px;font-size:17px;padding:14px 35px;cursor:pointer;">Reserve Now</button>
+        <button class="cancel-btn">Cancel</button>
+      </div>
+    </div>
+
+    <div class="res-card">
+      <div class="res-info">
+        <h3>AlUla Culture Event</h3>
+        <p>AlUla | Jan 12, 2026</p>
+        <p>Reservation Required</p>
+      </div>
+      <div class="res-actions">
+        <button onclick="reserveTickets()" style="background-color:#ff6b00;color:white;border:none;border-radius:8px;font-size:17px;padding:14px 35px;cursor:pointer;">Reserve Now</button>
+        <button class="cancel-btn">Cancel</button>
+      </div>
+    </div>
+
+    <div class="res-card">
+      <div class="res-info">
+        <h3>Maraya Social Restaurant</h3>
+        <p>AlUla | Dinner for 2 | Jan 13, 2026</p>
+        <p>Amount Due: 450 SAR</p>
+      </div>
+      <div class="res-actions">
+        <button onclick="reserveTickets()" style="background-color:#ff6b00;color:white;border:none;border-radius:8px;font-size:17px;padding:14px 35px;cursor:pointer;">Reserve Now</button>
+        <button class="cancel-btn">Cancel</button>
       </div>
     </div>
   </section>
 
-  <section class="featured-hotels">
-    <h2>Hotels</h2>
-    <div class="carousel-container">
-      <div class="cards-row" id="hotels-row">
-        <div class="card"><img src="image/ritz.jpg" alt=""><h3>Ritz-Carlton</h3><p>Riyadh</p><a href="event-details.html" class="btn-small">Reserve Now</a></div>
-        <div class="card"><img src="image/JeddahBeachResort.jpg" alt=""><h3>Jeddah Beach Resort</h3><p>Jeddah</p><a href="event-details.html" class="btn-small">Reserve Now</a></div>
-        <div class="card"><img src="image/AlUlaH.webp" alt=""><h3>AlUla Heritage Suites</h3><p>AlUla</p><a href="event-details.html" class="btn-small">Reserve Now</a></div>
-        <div class="card"><img src="image/FourSeasons.webp" alt=""><h3>Four Seasons</h3><p>Riyadh</p><a href="event-details.html" class="btn-small">Reserve Now</a></div>
-        <div class="card"><img src="image/Narcissus.jpg" alt=""><h3>Narcissus Hotel</h3><p>Riyadh</p><a href="event-details.html" class="btn-small">Reserve Now</a></div>
-        <div class="card"><img src="image/Fairmont.jpg" alt=""><h3>Fairmont Riyadh</h3><p>Riyadh</p><a href="event-details.html" class="btn-small">Reserve Now</a></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="featured-restaurants">
-    <h2>Restaurants</h2>
-    <div class="carousel-container">
-      <div class="cards-row" id="restaurants-row">
-        <div class="card"><img src="image/TheGlobe.jpg" alt=""><h3>The Globe</h3><p>Riyadh</p><a href="event-details.html" class="btn-small">Reserve Table</a></div>
-        <div class="card"><img src="image/lazycat.webp" alt=""><h3>Lazy Cat</h3><p>Riyadh</p><a href="event-details.html" class="btn-small">Reserve Table</a></div>
-        <div class="card"><img src="image/public.jpg" alt=""><h3>Public</h3><p>Riyadh</p><a href="event-details.html" class="btn-small">Reserve Table</a></div>
-        <div class="card"><img src="image/oulu.jpg" alt=""><h3>Oulu</h3><p>Riyadh</p><a href="event-details.html" class="btn-small">Reserve Table</a></div>
-        <div class="card"><img src="image/MarayaSocial.jpg" alt=""><h3>Maraya Social</h3><p>AlUla</p><a href="event-details.html" class="btn-small">Reserve Table</a></div>
-        <div class="card"><img src="image/Suhail.jpg" alt=""><h3>Suhail Restaurant</h3><p>AlUla</p><a href="event-details.html" class="btn-small">Reserve Table</a></div>
-      </div>
-    </div>
-  </section>
+  <p class="empty-message" id="emptyMessage" style="display:none;">
+    You don’t have any pending reservations right now.
+  </p>
 </main>
 
 <footer>
@@ -139,49 +148,35 @@ nav {
 </footer>
 
 <script>
-// ====== Auto-scroll setup ======
-let autoScrollInterval;
-
-function startAutoScroll() {
-  // Clear any existing interval
-  clearInterval(autoScrollInterval);
-
-  autoScrollInterval = setInterval(() => {
-    document.querySelectorAll('.cards-row').forEach(row => {
-      // Check if we've reached the end
-      if (row.scrollLeft + row.clientWidth >= row.scrollWidth) {
-        // If at the end, jump back to the start
-        row.scroll({ left: 0, behavior: 'instant' }); 
-      } else {
-        // Scroll slightly to the right
-        row.scrollBy({ left: 1, behavior: 'smooth' });
-      }
-    });
-  }, 20);
-}
-
-// Start auto-scroll on page load
-startAutoScroll();
-
-
-// ====== Search functionality ======
+// ===== Search functionality =====
 const searchInput = document.getElementById('searchInput');
+const reservations = document.querySelectorAll('.res-card');
+const emptyMessage = document.getElementById('emptyMessage');
+
 searchInput.addEventListener('keyup', () => {
   const filter = searchInput.value.toLowerCase();
+  let visibleCount = 0;
 
-  document.querySelectorAll('.cards-row .card').forEach(card => {
+  reservations.forEach(card => {
     const title = card.querySelector('h3').textContent.toLowerCase();
     const desc = card.querySelector('p').textContent.toLowerCase();
-
-    // Show card if title or description contains search term
     if (title.includes(filter) || desc.includes(filter)) {
-      card.style.display = 'block';
+      card.style.display = 'flex';
+      visibleCount++;
     } else {
       card.style.display = 'none';
     }
   });
+
+  emptyMessage.style.display = visibleCount === 0 ? 'block' : 'none';
 });
+
+// ===== Redirect on reserve button click =====
+function reserveTickets() {
+  window.location.href = "event-details.html";
+}
 </script>
+
 
 </body>
 </html>

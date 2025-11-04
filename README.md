@@ -7,7 +7,7 @@ Features:
 
 View all events with details.
 
-Filter eventsز
+Filter events
 
 Create personalized trip plans.
 

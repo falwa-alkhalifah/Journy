@@ -186,8 +186,6 @@
 </footer>
 
 <script>
-
-
   document.querySelectorAll('.view-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const details = btn.closest('.journey-card').querySelector('.journey-details');
@@ -197,13 +195,11 @@
     });
   });
 
-
   document.querySelectorAll('.edit-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       alert('Edit functionality coming soon!');
     });
   });
-
 
   document.getElementById('createJourneyBtn').addEventListener('click', () => {
     const days = parseInt(prompt('How many days do you want the itinerary to be?'), 10);
@@ -212,6 +208,7 @@
       return;
     }
 
+    // Riyadh-only reservations
     const sampleReservations = [
       'Hilton Riyadh Hotel & Residences',
       'Riyadh Comedy Festival',
@@ -219,7 +216,12 @@
       'Esports World Cup',
       'Al Orjouan Restaurant',
       'Joudyan Hotel Olaya',
-      'Noor Riyadh Light Festival'
+      'Noor Riyadh Festival',
+      'Boulevard World',
+      'The Globe Restaurant',
+      'Oulu Restaurant',
+      'Ritz-Carlton Riyadh',
+      'Four Seasons Riyadh'
     ];
 
     const selected = prompt(
@@ -248,7 +250,7 @@
     journey.className = 'journey-card';
     journey.innerHTML = `
       <div class="journey-header">
-        <h3>Custom Journey (${days} Days)</h3>
+        <h3>Custom Riyadh Journey (${days} Days)</h3>
         <div class="journey-actions">
           <button class="btn-small view-btn">View</button>
           <button class="btn-small edit-btn">Edit</button>
@@ -261,7 +263,7 @@
               <div class="itinerary-item">
                 <span class="time-tag">Day ${dayIndex + 1}</span>
                 <h4>${item}</h4>
-                <p>Enjoy your visit to ${item} — part of your custom journey.</p>
+                <p>Enjoy your visit to ${item} — part of your custom Riyadh journey.</p>
               </div>
             `).join('')}
           `).join('')}
@@ -270,7 +272,6 @@
     `;
     document.querySelector('.planner-container').appendChild(journey);
 
-    
     const viewBtn = journey.querySelector('.view-btn');
     const editBtn = journey.querySelector('.edit-btn');
     const details = journey.querySelector('.journey-details');

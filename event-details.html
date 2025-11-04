@@ -5,6 +5,78 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Journy - Event Details</title>
 <link rel="stylesheet" href="style.css">
+<style>
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-box {
+  background: white;
+  border-radius: 15px;
+  padding: 40px 50px;
+  text-align: center;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  animation: popIn 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.popup-box h1 {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+
+.popup-box h3 {
+  color: #ff6b00;
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.popup-box p {
+  font-size: 18px;
+  margin: 8px 0;
+  color: #444;
+}
+
+.popup-box strong {
+  font-size: 20px;
+  color: #000;
+}
+
+.popup-box button {
+  margin-top: 25px;
+  padding: 10px 25px;
+  background-color: #ff6b00;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+.popup-box button:hover {
+  background-color: #e25f00;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+</style>
+
+
 </head>
 <body>
 
@@ -60,12 +132,32 @@
   <p>&copy; 2025 Journy. All rights reserved.</p>
 </footer>
 
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup-box">
+    <h1>You have reserved tickets for the Riyadh Music Festival!</h1>
+    <h3> Useful Arabic Words </h3>
+
+    <p><strong>موسيقى</strong> (Musiqa) — Music</p>
+    <p><strong>حفلة</strong> (Haflah) — Concert</p>
+    <p><strong>تذكرة</strong> (Tathkira) — Ticket</p>
+
+    <button onclick="closePopup()">Close</button>
+  </div>
+</div>
+
+
+</body>
 <script>
 function reserveTickets() {
   const tickets = document.getElementById("tickets").value;
-  alert("You have reserved " + tickets + " ticket(s) for the Riyadh Music Festival!");
+  
+  // Show the Arabic words popup
+  document.getElementById("popupOverlay").style.display = "flex";
+}
+
+function closePopup() {
+  document.getElementById("popupOverlay").style.display = "none";
 }
 </script>
 
-</body>
 </html>

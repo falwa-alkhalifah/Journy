@@ -19,6 +19,25 @@
       color: #333;
     }
 
+    /* Create Journey Button */
+    .create-btn {
+      display: block;
+      margin: 0 auto 40px;
+      background-color: #ff6b00;
+      color: #fff;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .create-btn:hover {
+      background-color: #e65b00;
+    }
+
     .journey-card {
       background: #fff;
       border-radius: 12px;
@@ -109,12 +128,11 @@
       padding: 4px 12px;
       margin-bottom: 6px;
     }
-
   </style>
 </head>
 <body>
 
-  <header>
+<header>
   <nav>
     <div class="logo">Journy</div>
     <ul class="nav-links">
@@ -127,13 +145,110 @@
   </nav>
 </header>
 
-  <section class="planner-container">
-    <h2>My Journeys</h2>
+<section class="planner-container">
+  <h2>My Journeys</h2>
 
-    <!-- Journey 1 -->
-    <div class="journey-card">
+  <button class="create-btn" id="createJourneyBtn">+ Create Journey</button>
+
+  <!-- Example existing journey -->
+  <div class="journey-card">
+    <div class="journey-header">
+      <h3>Noor Riyadh Art Getaway</h3>
+      <div class="journey-actions">
+        <button class="btn-small view-btn">View</button>
+        <button class="btn-small edit-btn">Edit</button>
+      </div>
+    </div>
+    <div class="journey-details">
+      <div class="itinerary">
+        <div class="itinerary-item">
+          <span class="time-tag">Day 1</span>
+          <h4>Check-in: Hilton Riyadh Hotel & Residences</h4>
+          <p>Start your journey in comfort before heading to the festival.</p>
+        </div>
+        <div class="itinerary-item">
+          <span class="time-tag">Day 1</span>
+          <h4>Event: Noor Riyadh Festival</h4>
+          <p>Explore mesmerizing light installations and interactive art.</p>
+        </div>
+        <div class="itinerary-item">
+          <span class="time-tag">Day 2</span>
+          <h4>Dinner: Carbone Riyadh</h4>
+          <p>Enjoy Italian-American classics to wrap up your day.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2025 Journy. All rights reserved.</p>
+</footer>
+
+<script>
+
+
+  document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const details = btn.closest('.journey-card').querySelector('.journey-details');
+      const isOpen = details.style.display === 'block';
+      details.style.display = isOpen ? 'none' : 'block';
+      btn.textContent = isOpen ? 'View' : 'Hide';
+    });
+  });
+
+
+  document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      alert('Edit functionality coming soon!');
+    });
+  });
+
+
+  document.getElementById('createJourneyBtn').addEventListener('click', () => {
+    const days = parseInt(prompt('How many days do you want the itinerary to be?'), 10);
+    if (isNaN(days) || days <= 0) {
+      alert('Please enter a valid number of days.');
+      return;
+    }
+
+    const sampleReservations = [
+      'Hilton Riyadh Hotel & Residences',
+      'Riyadh Comedy Festival',
+      'Carbone Riyadh',
+      'Esports World Cup',
+      'Al Orjouan Restaurant',
+      'Joudyan Hotel Olaya',
+      'Noor Riyadh Light Festival'
+    ];
+
+    const selected = prompt(
+      `Select reservations for your journey:\n\n${sampleReservations.map((r, i) => `${i + 1}. ${r}`).join('\n')}\n\nEnter numbers separated by commas (e.g., 1,3,5):`
+    );
+    if (!selected) return;
+
+    const chosen = selected.split(',')
+      .map(i => sampleReservations[parseInt(i.trim()) - 1])
+      .filter(Boolean);
+
+    if (chosen.length === 0) {
+      alert('No valid selections made.');
+      return;
+    }
+
+    // Evenly distribute chosen reservations over the specified days
+    const perDay = Math.ceil(chosen.length / days);
+    const distributed = [];
+    for (let d = 0; d < days; d++) {
+      distributed.push(chosen.slice(d * perDay, (d + 1) * perDay));
+    }
+
+    // Build new journey card
+    const journey = document.createElement('div');
+    journey.className = 'journey-card';
+    journey.innerHTML = `
       <div class="journey-header">
-        <h3>Noor Riyadh Art Getaway</h3>
+        <h3>Custom Journey (${days} Days)</h3>
         <div class="journey-actions">
           <button class="btn-small view-btn">View</button>
           <button class="btn-small edit-btn">Edit</button>
@@ -141,108 +256,36 @@
       </div>
       <div class="journey-details">
         <div class="itinerary">
-          <div class="itinerary-item">
-            <span class="time-tag">Nov 20, 2025 - 2:00 PM</span>
-            <h4>Check-in: Hilton Riyadh Hotel & Residences</h4>
-            <p>Begin your art journey in luxury. Enjoy the spa and rooftop views before exploring Riyadh’s light festival.</p>
-          </div>
-          <div class="itinerary-item">
-            <span class="time-tag">Nov 20, 2025 - 7:00 PM</span>
-            <h4>Event: Noor Riyadh Festival</h4>
-            <p>Experience mesmerizing light installations and interactive displays spread across the city — a must-see cultural event.</p>
-          </div>
-          <div class="itinerary-item">
-            <span class="time-tag">Nov 21, 2025 - 8:00 PM</span>
-            <h4>Dinner: Carbone Riyadh</h4>
-            <p>Dine at the elegant Carbone Riyadh for Italian-American classics in a stylish setting to close out your artistic day.</p>
-          </div>
+          ${distributed.map((dayItems, dayIndex) => `
+            ${dayItems.map(item => `
+              <div class="itinerary-item">
+                <span class="time-tag">Day ${dayIndex + 1}</span>
+                <h4>${item}</h4>
+                <p>Enjoy your visit to ${item} — part of your custom journey.</p>
+              </div>
+            `).join('')}
+          `).join('')}
         </div>
       </div>
-    </div>
+    `;
+    document.querySelector('.planner-container').appendChild(journey);
 
-    <!-- Journey 2 -->
-    <div class="journey-card">
-      <div class="journey-header">
-        <h3>Riyadh Comedy Weekend</h3>
-        <div class="journey-actions">
-          <button class="btn-small view-btn">View</button>
-          <button class="btn-small edit-btn">Edit</button>
-        </div>
-      </div>
-      <div class="journey-details">
-        <div class="itinerary">
-          <div class="itinerary-item">
-            <span class="time-tag">Dec 5, 2025 - 1:00 PM</span>
-            <h4>Check-in: Riyadh Marriott Hotel</h4>
-            <p>Stay in the heart of Riyadh’s downtown district, close to the Boulevard City entertainment area.</p>
-          </div>
-          <div class="itinerary-item">
-            <span class="time-tag">Dec 5, 2025 - 6:00 PM</span>
-            <h4>Event: Riyadh Comedy Festival</h4>
-            <p>Laugh the night away with international stand-up acts and local comedians performing live in Boulevard City.</p>
-          </div>
-          <div class="itinerary-item">
-            <span class="time-tag">Dec 6, 2025 - 9:00 PM</span>
-            <h4>Dinner: Al Orjouan</h4>
-            <p>End your trip with a fine dining buffet featuring international cuisine in a luxurious, family-friendly atmosphere.</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    
+    const viewBtn = journey.querySelector('.view-btn');
+    const editBtn = journey.querySelector('.edit-btn');
+    const details = journey.querySelector('.journey-details');
 
-    <!-- Journey 3 -->
-    <div class="journey-card">
-      <div class="journey-header">
-        <h3>Esports World Cup Experience</h3>
-        <div class="journey-actions">
-          <button class="btn-small view-btn">View</button>
-          <button class="btn-small edit-btn">Edit</button>
-        </div>
-      </div>
-      <div class="journey-details">
-        <div class="itinerary">
-          <div class="itinerary-item">
-            <span class="time-tag">Aug 10, 2025 - 3:00 PM</span>
-            <h4>Check-in: Joudyan Hotel Olaya</h4>
-            <p>Stay in the central Olaya district for quick access to gaming venues, restaurants, and shopping areas.</p>
-          </div>
-          <div class="itinerary-item">
-            <span class="time-tag">Aug 11, 2025 - 12:00 PM</span>
-            <h4>Event: Esports World Cup</h4>
-            <p>Witness the world’s best gamers compete for massive prizes in this global esports tournament hosted in Riyadh.</p>
-          </div>
-          <div class="itinerary-item">
-            <span class="time-tag">Aug 11, 2025 - 8:30 PM</span>
-            <h4>Dinner: Hōchō Riyadh</h4>
-            <p>Relax after the competition with a refined Japanese dining experience at VIA Riyadh’s modern culinary hotspot.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </section>
-
-  <footer>
-    <p>&copy; 2025 TravelPlanner. All rights reserved.</p>
-  </footer>
-
-  <script>
-    // Toggle itinerary visibility
-    document.querySelectorAll('.view-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const details = btn.parentElement.parentElement.nextElementSibling;
-        const isOpen = details.style.display === 'block';
-        details.style.display = isOpen ? 'none' : 'block';
-        btn.textContent = isOpen ? 'View' : 'Hide';
-      });
+    viewBtn.addEventListener('click', () => {
+      const isOpen = details.style.display === 'block';
+      details.style.display = isOpen ? 'none' : 'block';
+      viewBtn.textContent = isOpen ? 'View' : 'Hide';
     });
 
-    // Placeholder Edit Button functionality
-    document.querySelectorAll('.edit-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        alert('Edit feature coming soon!');
-      });
+    editBtn.addEventListener('click', () => {
+      alert('Edit feature coming soon!');
     });
-  </script>
+  });
+</script>
+
 </body>
 </html>

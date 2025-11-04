@@ -7,22 +7,19 @@
   <link rel="stylesheet" href="style.css">
   <style>
     /* Page Specific Styles */
-    .discover-container {
+    section {
       padding: 60px 50px;
     }
 
-    .discover-header {
+    section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 40px;
       text-align: center;
+      color: #333;
       margin-bottom: 40px;
     }
 
-    .discover-header h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 40px;
-      color: #333;
-    }
-
-    /* Search and filter section */
+    /* Search & filter */
     .search-filter {
       display: flex;
       justify-content: center;
@@ -50,84 +47,18 @@
       cursor: pointer;
     }
 
-    /* Section styling */
-    .discover-section {
-      margin-bottom: 70px;
-    }
-
-    .discover-section h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 28px;
-      color: #ff6b00;
-      margin-bottom: 20px;
-      border-bottom: 2px solid #ff6b00;
-      display: inline-block;
-      padding-bottom: 5px;
-    }
-
-    /* Scroll lane (horizontal scrolling, no scrollbar visible) */
-    .scroll-lane {
+    /* Scroll lanes styled as .cards-row */
+    .cards-row {
       display: flex;
       gap: 25px;
       overflow-x: auto;
-      padding-bottom: 10px;
       scrollbar-width: none;
       -ms-overflow-style: none;
+      padding-bottom: 10px;
     }
 
-    .scroll-lane::-webkit-scrollbar {
+    .cards-row::-webkit-scrollbar {
       display: none;
-    }
-
-    /* Match Home Page Card Style */
-    .discover-card {
-      background: #fff;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-      transition: 0.3s;
-      width: 300px;
-      flex-shrink: 0;
-      text-align: center;
-    }
-
-    .discover-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(255,107,0,0.3);
-    }
-
-    .discover-card img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-    }
-
-    .discover-card h4 {
-      font-family: 'Playfair Display', serif;
-      font-size: 20px;
-      color: #ff6b00;
-      margin: 15px 0 8px;
-    }
-
-    .discover-card p {
-      color: #555;
-      font-size: 15px;
-      margin-bottom: 10px;
-    }
-
-    .btn-small {
-      display: inline-block;
-      margin-bottom: 15px;
-      padding: 8px 18px;
-      background: #ff6b00;
-      color: #fff;
-      border-radius: 5px;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-
-    .btn-small:hover {
-      background: #e65b00;
     }
   </style>
 </head>
@@ -138,7 +69,7 @@
     <div class="logo">Journy</div>
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
-      <li><a href="discover.html" class="active" style="color:#ff6b00;">Discover</a></li>
+      <li><a href="discover.html">Discover</a></li>
       <li><a href="planner.html">Planner</a></li>
       <li><a href="reservations.html">Reservations</a></li>
       <li><a href="login.html">log out</a></li>
@@ -146,179 +77,177 @@
   </nav>
 </header>
 
-<section class="discover-container">
-  <div class="discover-header">
-    <h2>Discover Riyadh</h2>
-    <div class="search-filter">
-      <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="Search events, hotels, or restaurants...">
-      </div>
-      <div class="filters">
-        <select>
-          <option>Filter by: Locally Owned</option>
-          <option>Locally Owned</option>
-          <option>Chain / International</option>
-        </select>
-        <select>
-          <option>Filter by: Prices</option>
-          <option>Low to High</option>
-          <option>High to Low</option>
-        </select>
-        <select>
-          <option>Filter by: Distance</option>
-          <option>Nearest</option>
-          <option>Farthest</option>
-        </select>
-      </div>
+<section>
+  <h2>Discover Riyadh</h2>
+  <div class="search-filter">
+    <div class="search-bar">
+      <input type="text" id="search" placeholder="Search events, hotels, or restaurants...">
+    </div>
+    <div class="filters">
+      <select>
+        <option>Filter by: Locally Owned</option>
+        <option>Locally Owned</option>
+        <option>Chain / International</option>
+      </select>
+      <select>
+        <option>Filter by: Prices</option>
+        <option>Low to High</option>
+        <option>High to Low</option>
+      </select>
+      <select>
+        <option>Filter by: Distance</option>
+        <option>Nearest</option>
+        <option>Farthest</option>
+      </select>
     </div>
   </div>
 
   <!-- Events Section -->
-  <div class="discover-section">
-    <h3>Events</h3>
-    <div class="scroll-lane">
-      <div class="discover-card">
+  <section>
+    <h2>Events</h2>
+    <div class="cards-row">
+      <div class="card">
         <img src="image/MDLBEAST.jpg" alt="Riyadh Music Festival">
-        <h4>Riyadh Music Festival</h4>
+        <h3>Riyadh Music Festival</h3>
         <p>March 15, 2026 | Riyadh</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
-      <div class="discover-card">
+      <div class="card">
         <img src="image/Formula.jpg" alt="Formula 1 Grand Prix">
-        <h4>Formula 1 Grand Prix</h4>
+        <h3>Formula 1 Grand Prix</h3>
         <p>April 2, 2026 | Jeddah</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
-      <div class="discover-card">
+      <div class="card">
         <img src="image/boulevardw.jpg" alt="Boulevard World">
-        <h4>Boulevard World</h4>
+        <h3>Boulevard World</h3>
         <p>Dec 5-25, 2025 | Riyadh</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
-      <div class="discover-card">
+      <div class="card">
         <img src="image/AlUla.png" alt="AlUla Culture Week">
-        <h4>AlUla Culture Week</h4>
+        <h3>AlUla Culture Week</h3>
         <p>Jan 10, 2026 | AlUla</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
-      <div class="discover-card">
+      <div class="card">
         <img src="image/noor-riyadh.jpeg" alt="Noor Riyadh">
-        <h4>Noor Riyadh</h4>
+        <h3>Noor Riyadh</h3>
         <p>Light & art festival with stunning installations and experiences.</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
-      <div class="discover-card">
+      <div class="card">
         <img src="image/riyadh-comedy.jpg" alt="Riyadh Comedy Festival">
-        <h4>Riyadh Comedy Festival</h4>
+        <h3>Riyadh Comedy Festival</h3>
         <p>Stand-up and improv festival with international comedians.</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
-      <div class="discover-card">
+      <div class="card">
         <img src="image/riyadh-season.webp" alt="Esports World Cup">
-        <h4>Esports World Cup</h4>
+        <h3>Esports World Cup</h3>
         <p>Global gaming competition bringing the best players to Riyadh.</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- Restaurants Section -->
-  <div class="discover-section">
-    <h3>Restaurants</h3>
-    <div class="scroll-lane">
-      <div class="discover-card">
+  <section>
+    <h2>Restaurants</h2>
+    <div class="cards-row">
+      <div class="card">
         <img src="image/TheGlobe.jpg" alt="The Globe">
-        <h4>The Globe</h4>
+        <h3>The Globe</h3>
         <p>Riyadh</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
-      <div class="discover-card">
+      <div class="card">
         <img src="image/lazycat.webp" alt="Lazy Cat">
-        <h4>Lazy Cat</h4>
+        <h3>Lazy Cat</h3>
         <p>Riyadh</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
-      <div class="discover-card">
+      <div class="card">
         <img src="image/public.jpg" alt="Public">
-        <h4>Public</h4>
+        <h3>Public</h3>
         <p>Riyadh</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
-      <div class="discover-card">
+      <div class="card">
         <img src="image/oulu.jpg" alt="Oulu">
-        <h4>Oulu</h4>
+        <h3>Oulu</h3>
         <p>Riyadh</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
-      <div class="discover-card">
+      <div class="card">
         <img src="image/carbone-riyadh.png" alt="Carbone Riyadh">
-        <h4>Carbone Riyadh</h4>
+        <h3>Carbone Riyadh</h3>
         <p>Upscale Italian-American dining with a New York twist.</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
-      <div class="discover-card">
+      <div class="card">
         <img src="image/al-orjouan.jpg" alt="Al Orjouan">
-        <h4>Al Orjouan</h4>
+        <h3>Al Orjouan</h3>
         <p>Fine dining with international cuisine and an elegant setting.</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
-      <div class="discover-card">
+      <div class="card">
         <img src="image/hocho-riyadh.png" alt="Hōchō Riyadh">
-        <h4>Hōchō Riyadh</h4>
+        <h3>Hōchō Riyadh</h3>
         <p>Modern Japanese restaurant located in VIA Riyadh.</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- Hotels Section -->
-  <div class="discover-section">
-    <h3>Hotels</h3>
-    <div class="scroll-lane">
-      <div class="discover-card">
+  <section>
+    <h2>Hotels</h2>
+    <div class="cards-row">
+      <div class="card">
         <img src="image/ritz.jpg" alt="Ritz-Carlton">
-        <h4>Ritz-Carlton</h4>
+        <h3>Ritz-Carlton</h3>
         <p>Riyadh</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
-      <div class="discover-card">
+      <div class="card">
         <img src="image/JeddahBeachResort.jpg" alt="Jeddah Beach Resort">
-        <h4>Jeddah Beach Resort</h4>
+        <h3>Jeddah Beach Resort</h3>
         <p>Jeddah</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
-      <div class="discover-card">
+      <div class="card">
         <img src="image/AlUlaH.webp" alt="AlUla Heritage Suites">
-        <h4>AlUla Heritage Suites</h4>
+        <h3>AlUla Heritage Suites</h3>
         <p>AlUla</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
-      <div class="discover-card">
+      <div class="card">
         <img src="image/FourSeasons.webp" alt="Four Seasons">
-        <h4>Four Seasons</h4>
+        <h3>Four Seasons</h3>
         <p>Riyadh</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
-      <div class="discover-card">
+      <div class="card">
         <img src="image/hilton-riyadh.jpg" alt="Hilton Riyadh">
-        <h4>Hilton Riyadh Hotel & Residences</h4>
+        <h3>Hilton Riyadh Hotel & Residences</h3>
         <p>Luxury stay with spa, indoor pool, and skyline views.</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
-      <div class="discover-card">
+      <div class="card">
         <img src="image/riyadh-marriott.jpg" alt="Riyadh Marriott">
-        <h4>Riyadh Marriott Hotel</h4>
+        <h3>Riyadh Marriott Hotel</h3>
         <p>Elegant 5-star stay in downtown Riyadh’s business district.</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
-      <div class="discover-card">
+      <div class="card">
         <img src="image/joudyan-riyadh.jpg" alt="Joudyan Hotel Olaya">
-        <h4>Joudyan Hotel Olaya</h4>
+        <h3>Joudyan Hotel Olaya</h3>
         <p>Modern comfort in Olaya, near major landmarks and shops.</p>
         <a href="event-details.html" class="btn-small">View Details</a>
       </div>
     </div>
-  </div>
+  </section>
 </section>
 
 <footer>
@@ -326,14 +255,14 @@
 </footer>
 
 <script>
-  // Live search functionality
-  const searchInput = document.getElementById("searchInput");
-  const cards = document.querySelectorAll(".discover-card");
+  
+  const searchInput = document.getElementById("search");
+  const cards = document.querySelectorAll(".card");
 
   searchInput.addEventListener("keyup", function() {
     const query = this.value.toLowerCase().trim();
     cards.forEach(card => {
-      const title = card.querySelector("h4").textContent.toLowerCase();
+      const title = card.querySelector("h3").textContent.toLowerCase();
       const description = card.querySelector("p").textContent.toLowerCase();
       if (title.includes(query) || description.includes(query)) {
         card.style.display = "block";

@@ -1,101 +1,201 @@
 /* Reset & fonts */
+
 * { margin:0; padding:0; box-sizing:border-box; }
+
 body { font-family: 'Poppins', sans-serif; background-color:#f9f9f9; color:#333; line-height:1.6; }
 
+
+
 /* Header & Navbar */
+
 header { position: relative; }
+
 nav { display:flex; justify-content:space-between; align-items:center; padding:20px 50px; background:#fff; box-shadow:0 3px 8px rgba(0,0,0,0.1); position:sticky; top:0; z-index:1000; }
+
 nav .logo { font-family:'Playfair Display', serif; font-size:28px; color:#ff6b00; font-weight:bold; }
+
 nav .nav-links { list-style:none; display:flex; gap:25px; }
+
 nav .nav-links li a { text-decoration:none; color:#333; font-weight:500; transition:0.3s; }
+
 nav .nav-links li a:hover { color:#ff6b00; }
 
+
+
 /* Hero Section */
+
 .hero { height:70vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; background:linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.3)), url('https://source.unsplash.com/1600x900/?saudi-arabia,travel') center/cover no-repeat; }
+
 .hero h1 { font-family:'Playfair Display', serif; font-size:48px; margin-bottom:20px; color:#333; }
+
 .hero p { font-size:20px; margin-bottom:30px; color:#555; }
+
 .btn { background-color:#ff6b00; color:#fff; padding:12px 30px; border:none; border-radius:6px; text-decoration:none; font-weight:600; transition:0.3s; }
+
 .btn:hover { background-color:#e65b00; }
 
+
+
 /* Featured Events */
+
 .featured-events { padding:60px 50px; }
+
 .featured-events h2 { font-family:'Playfair Display', serif; font-size:36px; margin-bottom:40px; text-align:center; color:#333; }
+
 .cards { display:flex; gap:30px; justify-content:center; flex-wrap:wrap; }
+
 .card { background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 6px 20px rgba(0,0,0,0.1); transition:0.3s; width:300px; }
+
 .card:hover { transform:translateY(-5px); box-shadow:0 8px 25px rgba(255,107,0,0.3); }
+
 .card img { width:100%; height:180px; object-fit:cover; }
+
 .card h3 { padding:15px; font-family:'Playfair Display', serif; color:#ff6b00; }
+
 .card p { padding:0 15px 15px; color:#555; }
+
 .btn-small { display:inline-block; margin:0 15px 15px; padding:8px 18px; background:#ff6b00; color:#fff; border-radius:5px; text-decoration:none; transition:0.3s; }
+
 .btn-small:hover { background:#e65b00; }
 
+
+
 /* Layout for static 4-card rows */
+
 section {
-  padding: 60px 50px;
+
+padding: 60px 50px;
+
 }
+
+
 
 section h2 {
-  font-family: 'Playfair Display', serif;
-  font-size: 36px;
-  margin-bottom: 40px;
-  text-align: center;
-  color: #333;
+
+font-family: 'Playfair Display', serif;
+
+font-size: 36px;
+
+margin-bottom: 40px;
+
+text-align: center;
+
+color: #333;
+
 }
+
+
 
 .cards-row {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  flex-wrap: wrap;
+
+display: flex;
+
+justify-content: center;
+
+gap: 30px;
+
+flex-wrap: wrap;
+
 }
+
+
 
 .card {
-  background: #fff;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-  transition: 0.3s;
-  width: 270px;
+
+background: #fff;
+
+border-radius: 10px;
+
+overflow: hidden;
+
+box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+
+transition: 0.3s;
+
+width: 270px;
+
 }
+
+
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(255,107,0,0.3);
+
+transform: translateY(-5px);
+
+box-shadow: 0 8px 25px rgba(255,107,0,0.3);
+
 }
+
+
 
 .card img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
+
+width: 100%;
+
+height: 180px;
+
+object-fit: cover;
+
 }
+
+
 
 .card h3 {
-  padding: 15px;
-  font-family: 'Playfair Display', serif;
-  color: #ff6b00;
+
+padding: 15px;
+
+font-family: 'Playfair Display', serif;
+
+color: #ff6b00;
+
 }
+
+
 
 .card p {
-  padding: 0 15px 15px;
-  color: #555;
+
+padding: 0 15px 15px;
+
+color: #555;
+
 }
+
+
 
 .btn-small {
-  display: inline-block;
-  margin: 0 15px 15px;
-  padding: 8px 18px;
-  background: #ff6b00;
-  color: #fff;
-  border-radius: 5px;
-  text-decoration: none;
-  transition: 0.3s;
+
+display: inline-block;
+
+margin: 0 15px 15px;
+
+padding: 8px 18px;
+
+background: #ff6b00;
+
+color: #fff;
+
+border-radius: 5px;
+
+text-decoration: none;
+
+transition: 0.3s;
+
 }
+
+
 
 .btn-small:hover {
-  background: #e65b00;
+
+background: #e65b00;
+
 }
+
 /* Footer */
+
 footer { text-align:center; padding:30px; background:#fff; color:#888; box-shadow:0 -3px 8px rgba(0,0,0,0.1); margin-top:50px; }
 
+
+
 /* Responsive */
+
 @media(max-width:768px){ .cards { flex-direction:column; align-items:center; } nav { flex-direction:column; gap:15px; } }

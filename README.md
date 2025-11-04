@@ -28,3 +28,5 @@ reservations.html: Displays a user’s confirmed and pending reservations. Users
 login.html: Handles user authentication. Users must log in to access protected pages.
 
 sign-up.html: Allows new users to register for an account.
+
+admin.html: Allows the admin to manage events.

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Add Event</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .admin-container {
+      padding: 60px 50px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .admin-container h2 {
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      color: #333;
+      margin-bottom: 40px;
+    }
+
+    form {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      padding: 40px;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #444;
+    }
+
+    input[type="text"],
+    input[type="datetime-local"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: border-color 0.3s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #ff6b00;
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .btn-submit {
+      background: #ff6b00;
+      color: #fff;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      display: block;
+      width: 100%;
+    }
+
+    .btn-submit:hover {
+      background: #e65b00;
+    }
+
+    .event-preview {
+      margin-top: 50px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      padding: 25px 35px;
+      display: none;
+    }
+
+    .event-preview h3 {
+      color: #ff6b00;
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .event-preview p {
+      color: #555;
+      margin: 5px 0;
+    }
+
+    .event-preview .date {
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo">Journy Admin</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="discover.html">Discover</a></li>
+      <li><a href="planner.html">Planner</a></li>
+      <li><a href="reservations.html">Reservations</a></li>
+      <li><a href="admin.html">Admin</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="admin-container">
+  <h2>Add New Event</h2>
+
+  <form id="addEventForm">
+    <div class="form-group">
+      <label for="eventName">Event Name *</label>
+      <input type="text" id="eventName" name="eventName" required placeholder="Enter event name">
+    </div>
+
+    <div class="form-group">
+      <label for="category">Category</label>
+      <select id="category" name="category">
+        <option value="">Select Category</option>
+        <option value="sports">Sports</option>
+        <option value="esports">Esports</option>
+        <option value="cultural">Cultural</option>
+        <option value="music">Music</option>
+        <option value="festival">Festival</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="city">City</label>
+      <input type="text" id="city" name="city" placeholder="Enter city (e.g., Riyadh)">
+    </div>
+
+    <div class="form-group">
+      <label for="location">Location / Venue</label>
+      <input type="text" id="location" name="location" placeholder="Enter location or coordinates">
+    </div>
+
+    <div class="form-group">
+      <label for="startDate">Start Date & Time *</label>
+      <input type="datetime-local" id="startDate" name="startDate" required>
+    </div>
+
+    <div class="form-group">
+      <label for="endDate">End Date & Time *</label>
+      <input type="datetime-local" id="endDate" name="endDate" required>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" name="description" placeholder="Enter detailed description about the event"></textarea>
+    </div>
+
+    <button type="submit" class="btn-submit">Add Event</button>
+  </form>
+
+  <!-- Event Preview Card -->
+  <div class="event-preview" id="eventPreview">
+    <h3 id="previewName"></h3>
+    <p class="date" id="previewDates"></p>
+    <p id="previewCategory"></p>
+    <p id="previewLocation"></p>
+    <p id="previewDescription"></p>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2025 Journy Admin. All rights reserved.</p>
+</footer>
+
+<script>
+  const form = document.getElementById('addEventForm');
+  const preview = document.getElementById('eventPreview');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const eventName = form.eventName.value.trim();
+    const category = form.category.value;
+    const city = form.city.value.trim();
+    const location = form.location.value.trim();
+    const startDate = form.startDate.value;
+    const endDate = form.endDate.value;
+    const description = form.description.value.trim();
+
+    if (!eventName || !startDate || !endDate) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    // Show preview
+    document.getElementById('previewName').textContent = eventName;
+    document.getElementById('previewDates').textContent = `From: ${startDate}  To: ${endDate}`;
+    document.getElementById('previewCategory').textContent = category ? `Category: ${category}` : '';
+    document.getElementById('previewLocation').textContent = location ? `Location: ${location}, ${city}` : city ? `City: ${city}` : '';
+    document.getElementById('previewDescription').textContent = description || 'No description provided.';
+
+    preview.style.display = 'block';
+    window.scrollTo({ top: preview.offsetTop, behavior: 'smooth' });
+
+    form.reset();
+  });
+</script>
+
+</body>
+</html>

@@ -1,28 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Journy - Login</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    .auth-page{min-height:70vh; display:flex; justify-content:center; align-items:center; padding:60px 20px;}
-    .auth-card{width:100%; max-width:520px; background:#fff; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.1); overflow:hidden;}
-    .auth-head{padding:22px 26px; border-bottom:1px solid #eee;}
-    .auth-head h2{font-family:'Playfair Display',serif; font-size:28px; color:#333;}
-    .auth-body{padding:22px 26px; display:grid; gap:14px;}
-    .form-group{display:grid; gap:6px;}
-    .form-group label{font-weight:600; color:#333;}
-    .form-control{padding:12px 14px; border:1px solid #ddd; border-radius:8px; font-size:15px; outline:none; width:100%;}
-    .form-control:focus{border-color:#ff6b00; box-shadow:0 0 0 3px rgba(255,107,0,0.12);}
-    .error{color:#d33; font-size:13px; min-height:1em;}
-    .helper{font-size:13px; color:#777;}
-    .auth-actions{display:grid; gap:12px; margin-top:6px;}
-    .btn:disabled{opacity:.6; cursor:not-allowed;}
-    /* تفعيل لون الرابط النشط في الهيدر */
-    nav .nav-links li a.active{color:#ff6b00;}
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Journy - Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+
+<!-- Scoped styles — affect this page only -->
+<style>
+  .auth-section{
+    max-width: 500px; margin: 80px auto; background:#fff;
+    border:1px solid rgba(0,0,0,.08); border-radius:12px;
+    padding:40px 30px; box-shadow:0 6px 20px rgba(0,0,0,.08);
+  }
+  .auth-section h2{ font-family:'Playfair Display',serif; font-size:32px; color:#333; text-align:center; margin-bottom:10px }
+  .auth-section .subtitle{ text-align:center; color:#666; margin-bottom:24px; font-size:15px }
+  .auth-section label{ display:block; font-weight:600; color:#333; margin:15px 0 6px }
+  .auth-section .input-wrapper{
+    display:flex; align-items:center; gap:8px; background:#fff; border:1px solid #ddd; border-radius:10px;
+    padding:10px 12px; transition:border-color .2s, box-shadow .2s;
+  }
+  .auth-section .input-wrapper:focus-within{ border-color:#ff6b00; box-shadow:0 0 0 3px rgba(255,107,0,.15) }
+  .auth-section input[type="email"], .auth-section input[type="password"]{
+    width:100%; border:0; outline:0; background:transparent; font-size:16px; color:#333;
+  }
+  .auth-section .peek{ border:0; background:#f5f5f5; color:#555; padding:6px 8px; border-radius:8px; cursor:pointer }
+  .auth-section .peek:hover{ background:#eee }
+  .auth-section .btn{
+    width:100%; margin-top:18px; background:#ff6b00; color:#fff; border:none;
+    border-radius:10px; padding:12px; font-weight:600; cursor:pointer; transition:background .2s;
+  }
+  .auth-section .btn:hover{ background:#e65b00 }
+  .auth-section .btn:disabled{ opacity:.6; cursor:not-allowed }
+  .auth-section .switch{ text-align:center; margin-top:15px; font-size:14px; color:#555 }
+  .auth-section .switch a{ color:#ff6b00; text-decoration:underline }
+  .auth-section .error{ color:#d93025; font-size:13px; margin-top:6px; display:block }
+  .auth-section .note{ color:#777; font-size:13px; margin-top:6px; text-align:center }
+  @media (max-width:768px){ .auth-section{ margin:50px 16px; padding:30px 20px } }
+</style>
 </head>
 <body>
 <header>
@@ -36,35 +52,29 @@
 </header>
 
 <main>
-  <section class="auth-page">
-    <div class="auth-card">
-      <div class="auth-head">
-        <h2>Login to Journy</h2>
+  <section class="auth-section" aria-labelledby="login-title">
+    <h2 id="login-title">Login to Journy</h2>
+    <p class="subtitle">Access your account to explore and manage your bookings.</p>
+
+    <form id="loginForm" novalidate>
+      <label for="email">Email</label>
+      <div class="input-wrapper">
+        <input type="email" id="email" placeholder="Enter your email" autocomplete="email" required>
       </div>
-      <form class="auth-body" id="loginForm" novalidate>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input class="form-control" type="email" id="email" placeholder="Enter your email" autocomplete="email" required>
-          <div class="error" id="emailErr"></div>
-        </div>
+      <small class="error" id="emailError"></small>
 
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input class="form-control" type="password" id="password" placeholder="Enter your password" minlength="8" required>
-          <div class="error" id="passErr"></div>
-        </div>
+      <label for="password">Password</label>
+      <div class="input-wrapper">
+        <input type="password" id="password" placeholder="Enter your password" minlength="8" required>
+        <button class="peek" type="button" aria-label="Show password" data-target="password">👁</button>
+      </div>
+      <small class="error" id="passwordError"></small>
 
-        <div style="display:flex;align-items:center;gap:8px;">
-          <input type="checkbox" id="remember">
-          <label for="remember" class="helper">Remember me</label>
-        </div>
 
-        <div class="auth-actions">
-          <button type="submit" class="btn" id="loginBtn" disabled>Login</button>
-          <p class="helper">Don’t have an account? <a class="link-inline" href="signup.html" style="color:#ff6b00;">Sign Up</a></p>
-        </div>
-      </form>
-    </div>
+      <button type="submit" class="btn" id="loginBtn" disabled>Login</button>
+      <p class="switch">Don’t have an account? <a href="signup.html">Sign Up</a></p>
+      <small id="formMsg" class="error"></small>
+    </form>
   </section>
 </main>
 
@@ -73,39 +83,56 @@
 </footer>
 
 <script>
-  (function(){
-    const f = document.getElementById('loginForm');
-    const emailI = document.getElementById('email');
-    const passI  = document.getElementById('password');
-    const emailErr = document.getElementById('emailErr');
-    const passErr  = document.getElementById('passErr');
-    const btn = document.getElementById('loginBtn');
+  function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
 
-    function validate(){
-      let ok = true;
-      const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if(!emailI.value.trim()){ emailErr.textContent='Please enter your email.'; ok=false; }
-      else if(!emailRx.test(emailI.value)){ emailErr.textContent='Invalid email format.'; ok=false; }
-      else { emailErr.textContent=''; }
+  // show/hide password
+  document.querySelectorAll('.peek').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const f = document.getElementById(b.dataset.target);
+      const isPwd = f.type === 'password';
+      f.type = isPwd ? 'text' : 'password';
+      b.setAttribute('aria-label', isPwd ? 'Hide password' : 'Show password');
+    });
+  });
 
-      if(!passI.value.trim()){ passErr.textContent='Please enter your password.'; ok=false; }
-      else if(passI.value.length<8){ passErr.textContent='Password must be at least 8 characters.'; ok=false; }
-      else { passErr.textContent=''; }
+  const email = document.getElementById('email');
+  const password = document.getElementById('password');
+  const emailError = document.getElementById('emailError');
+  const passwordError = document.getElementById('passwordError');
+  const formMsg = document.getElementById('formMsg');
+  const btn = document.getElementById('loginBtn');
 
-      btn.disabled = !ok;
-      return ok;
+  function validate(){
+    let ok = true; formMsg.textContent = '';
+    if(!email.value.trim()){ emailError.textContent = 'Please enter your email.'; ok = false; }
+    else if(!validEmail(email.value)){ emailError.textContent = 'Invalid email format.'; ok = false; }
+    else { emailError.textContent = ''; }
+
+    if(!password.value.trim()){ passwordError.textContent = 'Please enter your password.'; ok = false; }
+    else if(password.value.length < 8){ passwordError.textContent = 'Password must be at least 8 characters.'; ok = false; }
+    else { passwordError.textContent = ''; }
+
+    btn.disabled = !ok; return ok;
+  }
+  [email,password].forEach(i=>i.addEventListener('input', validate)); validate();
+
+  document.getElementById('loginForm').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    if(!validate()) return;
+
+    const raw = localStorage.getItem('journy_user');
+    if(!raw){ formMsg.textContent = 'No account found. Please sign up first.'; return; }
+    const user = JSON.parse(raw);
+
+    if(user.email.toLowerCase() !== email.value.trim().toLowerCase()){
+      formMsg.textContent = 'Email does not match any saved account.'; return;
     }
 
-    [emailI, passI].forEach(el=>el.addEventListener('input', validate));
-
-    f.addEventListener('submit', e=>{
-      e.preventDefault();
-      if(!validate()) return;
-      btn.textContent='Logging in...';
-      btn.disabled = true;
-      setTimeout(()=>{ alert('Login successful (frontend demo).'); window.location.href='index.html'; },700);
-    });
-  })();
+    btn.textContent = 'Logging in...'; btn.disabled = true;
+    setTimeout(()=>{
+      const dest = (user.role === 'admin') ? 'admin.html' : 'index.html';
+ window.location.href = 'index.html';    }, 400);
+  });
 </script>
 </body>
 </html>

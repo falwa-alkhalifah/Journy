@@ -1,10 +1,10 @@
 <?php
-<?php
-require 'db_config.php'; // CHANGED FROM connect.php
+ini_set('display_errors', 1);
+require 'db_config.php';
 $user_id = 1;
 
 // Fetch journeys
-$journeys = $link->query(" // CHANGED $conn TO $link
+$journeys = $link->query("
     SELECT * FROM journeys WHERE userID = $user_id ORDER BY journeyID DESC
 ");
 
@@ -26,13 +26,13 @@ $view_journey_id = isset($_GET['view']) ? intval($_GET['view']) : 0;
     .journey-card{ background:#fff; border-radius:12px; box-shadow:0 4px 18px rgba(0,0,0,0.12); margin-bottom:30px; overflow:hidden; } 
     .journey-header{ padding:18px 25px; background:var(--green-mid); color:#fff; display:flex; justify-content:space-between; align-items:center; } 
     .itinerary{ padding:25px 40px; border-left:4px solid var(--green-mid); }
-    .time-tag{ background:var(--brown-subtle); padding:4px 12px; color:#fff; border-radius:20px; font-size:14px; } 
+    .itinerary p {
+        margin: 15px 0;
+        padding: 10px 0;
+    }
+    .time-tag{ background:var(--brown-subtle); padding:6px 14px; color:#fff; border-radius:20px; font-size:14px; margin-right: 10px; }
     .btn-small{ background:var(--brown-subtle); color:white; padding:8px 15px; border-radius:6px; margin-left:10px; }
     .btn-small:hover{ background:var(--brown-dark); }
-.itinerary p {
-    margin: 15px 0;
-    padding: 10px 0;
-}
 </style>
 </head>
 <body>
@@ -56,7 +56,7 @@ $view_journey_id = isset($_GET['view']) ? intval($_GET['view']) : 0;
         <?php
         $journeyID = isset($j['JourneyID']) ? intval($j['JourneyID']) : 0;
         if ($journeyID > 0) {
-            $days = $conn->query("SELECT * FROM journey_days WHERE journeyID=$journeyID");
+            $days = $link->query("SELECT * FROM journey_days WHERE journeyID=$journeyID");
         } else {
             $days = false;
         }
@@ -78,16 +78,16 @@ $view_journey_id = isset($_GET['view']) ? intval($_GET['view']) : 0;
             <div class="journey-details" style="padding:25px;">
                 <?php while($d = $days->fetch_assoc()): ?>
                     <div class="itinerary">
-                        <h3 style="color:var(--green-dark);margin-bottom:8px;">Day <?= $d['DayNumber'] ?></h3>
+                        <h3 style="color:var(--green-dark);margin-bottom:8px;">Day <?= $d['dayNumber'] ?></h3>
                         <?php
-                        $items = $conn->query("
+                        $items = $link->query("
                             SELECT ji.*, 
                                    COALESCE(e.eventName, p.name) AS rname 
                             FROM journey_items ji
                             JOIN reservations r ON r.reservationID = ji.reservationID
                             LEFT JOIN events e ON r.eventID = e.eventID
                             LEFT JOIN places p ON r.placeID = p.placeID
-                            WHERE ji.dayID={$d['DayID']}
+                            WHERE ji.dayID={$d['dayID']}
                         ");
                         
                         if($items->num_rows > 0): ?>

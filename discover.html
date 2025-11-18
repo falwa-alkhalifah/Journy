@@ -1,253 +1,117 @@
+<?php
+require 'connect.php';
+
+// Fetch events
+$events = $conn->query("SELECT * FROM events");
+
+// Fetch places grouped
+$restaurants = $conn->query("SELECT * FROM places WHERE type='restaurant'");
+$hotels = $conn->query("SELECT * FROM places WHERE type='hotel'");
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Journy - Discover</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    /* Page Specific Styles */
-    section {
-      padding: 60px 50px;
-    }
+<title>Discover</title>
+<link rel="stylesheet" href="style.css">
 
-    section h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 40px;
-      text-align: center;
-      color: #333;
-      margin-bottom: 40px;
-    }
-
-    /* Search & filter */
-    .search-filter {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 15px;
-      margin-bottom: 40px;
-    }
-
-    .search-bar input {
-      padding: 10px 15px;
-      width: 280px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      outline: none;
-      font-size: 16px;
-    }
-
-    .filters select {
-      padding: 10px 15px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      background-color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    /* Scroll lanes styled as .cards-row */
-    .cards-row {
-      display: flex;
-      gap: 25px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      padding-bottom: 10px;
-    }
-
-    .cards-row::-webkit-scrollbar {
-      display: none;
-    }
-  </style>
+<style>
+.discover-container{
+    padding:50px;
+    max-width:1200px;
+    margin:0 auto;
+}
+.section-title{
+    font-family:'Playfair Display',serif;
+    color:var(--green-dark);
+    font-size:32px;
+    text-align:center;
+    margin-bottom:30px;
+}
+.lane{
+    display:flex;
+    gap:20px;
+    overflow-x:auto;
+    padding-bottom:15px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+.lane::-webkit-scrollbar{display:none;}
+.card{
+    text-align:center;
+    min-width:250px;
+}
+.card img{
+    width:100%;
+    height:160px;
+    object-fit:cover;
+    border-radius:8px;
+}
+.details-btn{
+    background:var(--green-mid);
+    color:white;
+    border:none;
+    padding:8px 16px;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:10px;
+}
+.details-btn:hover{
+    background:var(--green-dark);
+}
+</style>
 </head>
+
 <body>
+<?php include 'header.php'; ?>
 
-<header>
-  <nav>
-    <div class="logo">Journy</div>
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="discover.html">Discover</a></li>
-      <li><a href="planner.html">Planner</a></li>
-      <li><a href="reservations.html">Reservations</a></li>
-      <li><a href="admin.html">Admin</a></li>
-      <li><a href="login.html">Log Out</a></li>
-    </ul>
-  </nav>
-</header>
+<section class="discover-container">
 
-<section>
-  <h2>Discover Riyadh</h2>
-  <div class="search-filter">
-    <div class="search-bar">
-      <input type="text" id="search" placeholder="Search events, hotels, or restaurants...">
+<h1 class="section-title">Events</h1>
+<div class="lane">
+<?php while($e=$events->fetch_assoc()): ?>
+    <div class="card">
+        <img src="<?= !empty($e['ImageURL']) ? $e['ImageURL'] : 'image/default_event.jpg' ?>" alt="<?= $e['EventName'] ?>">
+        <h3><?= $e['EventName'] ?></h3>
+        <p><?= $e['City'] ?></p>
+        <a href="event_details.php?id=<?= $e['EventID'] ?>">
+            <button class="details-btn">Details</button>
+        </a>
     </div>
-    <div class="filters">
-      <select>
-        <option>Filter by: Locally Owned</option>
-        <option>Locally Owned</option>
-        <option>Chain / International</option>
-      </select>
-      <select>
-        <option>Filter by: Prices</option>
-        <option>Low to High</option>
-        <option>High to Low</option>
-      </select>
-      <select>
-        <option>Filter by: Distance</option>
-        <option>Nearest</option>
-        <option>Farthest</option>
-      </select>
-    </div>
-  </div>
+<?php endwhile; ?>
+</div>
 
-  <!-- Events Section -->
-  <section>
-    <h2>Events</h2>
-    <div class="cards-row">
-      <div class="card">
-        <img src="image/MDLBEAST.jpg" alt="Riyadh Music Festival">
-        <h3>Riyadh Music Festival</h3>
-        <p>March 15, 2026 | Riyadh</p>
-        <a href="event-details.html" class="btn-small">View Details</a>
-      </div>
-      <div class="card">
-        <img src="image/boulevardw.jpg" alt="Boulevard World">
-        <h3>Boulevard World</h3>
-        <p>Dec 5-25, 2025 | Riyadh</p>
-        <a href="event-details.html" class="btn-small">View Details</a>
-      </div>
-      <div class="card">
-        <img src="image/noor-riyadh.jpeg" alt="Noor Riyadh">
-        <h3>Noor Riyadh</h3>
-        <p>Light & art festival with stunning installations and experiences.</p>
-        <a href="event-details.html" class="btn-small">View Details</a>
-      </div>
-      <div class="card">
-        <img src="image/riyadh-comedy.jpg" alt="Riyadh Comedy Festival">
-        <h3>Riyadh Comedy Festival</h3>
-        <p>Stand-up and improv festival with international comedians.</p>
-        <a href="event-details.html" class="btn-small">View Details</a>
-      </div>
-      <div class="card">
-        <img src="image/riyadh-season.webp" alt="Esports World Cup">
-        <h3>Esports World Cup</h3>
-        <p>Global gaming competition bringing the best players to Riyadh.</p>
-        <a href="event-details.html" class="btn-small">View Details</a>
-      </div>
+<h1 class="section-title">Restaurants</h1>
+<div class="lane">
+<?php while($r=$restaurants->fetch_assoc()): ?>
+    <div class="card">
+        <img src="<?= !empty($r['ImageURL']) ? $r['ImageURL'] : 'image/default_restaurant.jpg' ?>" alt="<?= $r['Name'] ?>">
+        <h3><?= $r['Name'] ?></h3>
+        <p><?= $r['City'] ?></p>
+        <a href="event_details.php?id=<?= $r['PlaceID'] ?>&type=place">
+            <button class="details-btn">Details</button>
+        </a>
     </div>
-  </section>
+<?php endwhile; ?>
+</div>
 
-  <!-- Restaurants Section -->
-  <section>
-    <h2>Restaurants</h2>
-    <div class="cards-row">
-      <div class="card">
-        <img src="image/TheGlobe.jpg" alt="The Globe">
-        <h3>The Globe</h3>
-        <p>Riyadh</p>
-        <a href="event-details.html" class="btn-small">View Details</a>
-      </div>
-      <div class="card">
-        <img src="image/lazycat.webp" alt="Lazy Cat">
-        <h3>Lazy Cat</h3>
-        <p>Riyadh</p>
-        <a href="event-details.html" class="btn-small">View Details</a>
-      </div>
-      <div class="card">
-        <img src="image/public.jpg" alt="Public">
-        <h3>Public</h3>
-        <p>Riyadh</p>
-        <a href="event-details.html" class="btn-small">View Details</a>
-      </div>
-      <div class="card">
-        <img src="image/oulu.jpg" alt="Oulu">
-        <h3>Oulu</h3>
-        <p>Riyadh</p>
-        <a href="event-details.html" class="btn-small">View Details</a>
-      </div>
-      <div class="card">
-        <img src="image/carbone-riyadh.png" alt="Carbone Riyadh">
-        <h3>Carbone Riyadh</h3>
-        <p>Upscale Italian-American dining with a New York twist.</p>
-        <a href="event-details.html" class="btn-small">View Details</a>
-      </div>
-      <div class="card">
-        <img src="image/al-orjouan.jpg" alt="Al Orjouan">
-        <h3>Al Orjouan</h3>
-        <p>Fine dining with international cuisine and an elegant setting.</p>
-        <a href="event-details.html" class="btn-small">View Details</a>
-      </div>
-      <div class="card">
-        <img src="image/hocho-riyadh.png" alt="Hōchō Riyadh">
-        <h3>Hōchō Riyadh</h3>
-        <p>Modern Japanese restaurant located in VIA Riyadh.</p>
-        <a href="event-details.html" class="btn-small">View Details</a>
-      </div>
+<h1 class="section-title">Hotels</h1>
+<div class="lane">
+<?php while($h=$hotels->fetch_assoc()): ?>
+    <div class="card">
+        <img src="<?= !empty($h['ImageURL']) ? $h['ImageURL'] : 'image/default_hotel.jpg' ?>" alt="<?= $h['Name'] ?>">
+        <h3><?= $h['Name'] ?></h3>
+        <p><?= $h['City'] ?></p>
+        <a href="event_details.php?id=<?= $h['PlaceID'] ?>&type=place">
+            <button class="details-btn">Details</button>
+        </a>
     </div>
-  </section>
+<?php endwhile; ?>
+</div>
 
-  <!-- Hotels Section -->
-  <section>
-    <h2>Hotels</h2>
-    <div class="cards-row">
-      <div class="card">
-        <img src="image/ritz.jpg" alt="Ritz-Carlton">
-        <h3>Ritz-Carlton</h3>
-        <p>Riyadh</p>
-        <a href="event-details.html" class="btn-small">View Details</a>
-      </div>
-      <div class="card">
-        <img src="image/FourSeasons.webp" alt="Four Seasons">
-        <h3>Four Seasons</h3>
-        <p>Riyadh</p>
-        <a href="event-details.html" class="btn-small">View Details</a>
-      </div>
-      <div class="card">
-        <img src="image/hilton-riyadh.jpg" alt="Hilton Riyadh">
-        <h3>Hilton Riyadh Hotel & Residences</h3>
-        <p>Luxury stay with spa, indoor pool, and skyline views.</p>
-        <a href="event-details.html" class="btn-small">View Details</a>
-      </div>
-      <div class="card">
-        <img src="image/riyadh-marriott.jpg" alt="Riyadh Marriott">
-        <h3>Riyadh Marriott Hotel</h3>
-        <p>Elegant 5-star stay in downtown Riyadh’s business district.</p>
-        <a href="event-details.html" class="btn-small">View Details</a>
-      </div>
-      <div class="card">
-        <img src="image/joudyan-riyadh.jpg" alt="Joudyan Hotel Olaya">
-        <h3>Joudyan Hotel Olaya</h3>
-        <p>Modern comfort in Olaya, near major landmarks and shops.</p>
-        <a href="event-details.html" class="btn-small">View Details</a>
-      </div>
-    </div>
-  </section>
 </section>
 
 <footer>
   <p>&copy; 2025 Journy. All rights reserved.</p>
 </footer>
-
-<script>
-  const searchInput = document.getElementById("search");
-  const cards = document.querySelectorAll(".card");
-
-  searchInput.addEventListener("keyup", function() {
-    const query = this.value.toLowerCase().trim();
-    cards.forEach(card => {
-      const title = card.querySelector("h3").textContent.toLowerCase();
-      const description = card.querySelector("p").textContent.toLowerCase();
-      if (title.includes(query) || description.includes(query)) {
-        card.style.display = "block";
-      } else {
-        card.style.display = "none";
-      }
-    });
-  });
-</script>
-
 </body>
 </html>

@@ -1,10 +1,10 @@
 <?php
-ini_set('display_errors', 1);
-require 'connect.php';
+<?php
+require 'db_config.php'; // CHANGED FROM connect.php
 $user_id = 1;
 
 // Fetch journeys
-$journeys = $conn->query("
+$journeys = $link->query(" // CHANGED $conn TO $link
     SELECT * FROM journeys WHERE userID = $user_id ORDER BY journeyID DESC
 ");
 

@@ -1,12 +1,12 @@
 <?php
-require 'connect.php';
+require 'db_config.php';
 
 // Fetch events
-$events = $conn->query("SELECT * FROM events");
+$events = $link->query("SELECT * FROM events");
 
 // Fetch places grouped
-$restaurants = $conn->query("SELECT * FROM places WHERE type='restaurant'");
-$hotels = $conn->query("SELECT * FROM places WHERE type='hotel'");
+$restaurants = $link->query("SELECT * FROM places WHERE type='restaurant'");
+$hotels = $link->query("SELECT * FROM places WHERE type='hotel'");
 ?>
 <!DOCTYPE html>
 <html>
@@ -62,7 +62,18 @@ $hotels = $conn->query("SELECT * FROM places WHERE type='hotel'");
 </head>
 
 <body>
-<?php include 'header.php'; ?>
+<header>
+  <nav>
+    <div class="logo">Journy</div>
+    <ul class="nav-links">
+      <li><a href="index.php">Home</a></li>
+      <li><a href="discover.php">Discover</a></li>
+      <li><a href="planner.php">Planner</a></li>
+      <li><a href="reservations.php">Reservations</a></li>
+      <li><a href="login.php">Log in</a></li>
+    </ul>
+  </nav>
+</header>
 
 <section class="discover-container">
 

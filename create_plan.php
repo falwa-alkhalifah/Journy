@@ -1,11 +1,10 @@
 <?php
-ini_set('display_errors', 1);
-require 'connect.php';
+require 'db_config.php';
 $user_id = 1;
 
-// SAVE JOURNEY - MOVED TO TOP
+// SAVE JOURNEY 
 if(isset($_POST['save'])){
-    $name = $conn->real_escape_string($_POST['journeyName']);
+    $name = $link->real_escape_string($_POST['journeyName']);
     $days = intval($_POST['days']);
     $selected = isset($_POST['reservations']) ? $_POST['reservations'] : [];
 
@@ -15,41 +14,38 @@ if(isset($_POST['save'])){
     }
 
     // Insert journey
-    $conn->query("INSERT INTO journeys (userID, journeyName, days) VALUES ($user_id, '$name', $days)");
-    $jid = $conn->insert_id;
+    $link->query("INSERT INTO journeys (userID, journeyName, days) VALUES ($user_id, '$name', $days)");
+    $jid = $link->insert_id;
 
     // Create days and get their IDs
     $dayIDs = [];
     for($d=1; $d<=$days; $d++){
-        $conn->query("INSERT INTO journey_days (journeyID, dayNumber) VALUES ($jid, $d)");
-        $dayIDs[] = $conn->insert_id;
+        $link->query("INSERT INTO journey_days (journeyID, dayNumber) VALUES ($jid, $d)");
+        $dayIDs[] = $link->insert_id;
     }
 
     // Simple distribution: put reservations in order across days
     $index = 0;
     foreach($selected as $reservationID){
-        $day_index = $index % $days; // Cycle through days
+        $day_index = $index % $days;
         $dayID = $dayIDs[$day_index];
         $resID = intval($reservationID);
         
-        // Insert without specifying ItemID (let auto-increment handle it)
-        $conn->query("INSERT INTO journey_items (dayID, reservationID) VALUES ($dayID, $resID)");
+        $link->query("INSERT INTO journey_items (dayID, reservationID) VALUES ($dayID, $resID)");
         
-        // Check for errors
-        if($conn->error){
-            die("Database error: " . $conn->error);
+        if($link->error){
+            die("Database error: " . $link->error);
         }
         
         $index++;
     }
 
-    // REDIRECT TO PLANNER PAGE
     header("Location: planner.php");
     exit;
 }
 
 // Fetch reservations for the form (AFTER processing POST)
-$res = $conn->query("
+$res = $link->query("
     SELECT r.*, 
            COALESCE(e.eventName, p.name) AS name 
     FROM reservations r
@@ -102,6 +98,7 @@ input, select{ width:100%; padding:10px; margin:10px 0 20px; border-radius:6px; 
     </ul>
   </nav>
 </header>
+
 <section class="create-container">
 
 <?php if(!$hasReservations): ?>
@@ -123,8 +120,8 @@ input, select{ width:100%; padding:10px; margin:10px 0 20px; border-radius:6px; 
         <div>
             <?php while($r = $res->fetch_assoc()): ?>
             <div class="checkbox-item">
-                <input type="checkbox" name="reservations[]" value="<?= $r['ReservationID'] ?>" id="res_<?= $r['ReservationID'] ?>">
-                <label for="res_<?= $r['ReservationID'] ?>"><?= $r['name'] ?></label>
+                <input type="checkbox" name="reservations[]" value="<?= $r['reservationID'] ?>" id="res_<?= $r['reservationID'] ?>">
+                <label for="res_<?= $r['reservationID'] ?>"><?= $r['name'] ?></label>
             </div>
             <?php endwhile; ?>
         </div>
@@ -134,6 +131,7 @@ input, select{ width:100%; padding:10px; margin:10px 0 20px; border-radius:6px; 
 <?php endif; ?>
 
 </section>
+
 <footer>
   <p>&copy; 2025 Journy. All rights reserved.</p>
 </footer>

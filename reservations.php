@@ -424,8 +424,6 @@ HTML;
 
       <li><a href="reservations.php">Reservations</a></li>
 
-      <li><a href="admin.php">Admin</a></li>
-
       <li><a href="login.php">Log Out</a></li>
 
     </ul>

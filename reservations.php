@@ -367,6 +367,7 @@ HTML;
 <title>Journy - Reservations</title>
 
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style2.css">
 
 <style>
 

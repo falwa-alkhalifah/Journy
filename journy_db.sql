@@ -50,19 +50,19 @@ CREATE TABLE `events` (
   `StartDate` date NOT NULL,
   `EndDate` date DEFAULT NULL,
   `AvailableTickets` int(11) NOT NULL DEFAULT '0',
-  `ImageURL` varchar(255) DEFAULT NULL
+  `ImageURL` varchar(255) DEFAULT NULL,
+  `Price` decimal(10,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `events`
 --
 
-INSERT INTO `events` (`EventID`, `EventName`, `Category`, `City`, `Location`, `Description`, `StartDate`, `EndDate`, `AvailableTickets`, `ImageURL`) VALUES
-(1, 'Riyadh Music Festival', 'Music', 'Riyadh', 'Riyadh Boulevard', 'The largest music festival in the Middle East featuring local and international acts.', '2025-12-10', '2025-12-15', 500, 'image/MDLBEAST.jpg'),
-(2, 'Boulevard World', 'Entertainment', 'Riyadh', 'Riyadh Season Zone', 'A massive entertainment zone featuring diverse global experiences, massive rides, and international restaurants.', '2025-10-15', '2026-03-30', 9999, 'image/boulevardw.jpg'),
-(3, 'Saudi Tech Expo', 'Technology', 'Riyadh', 'RIEC', 'Discover the latest innovations and technologies transforming the Kingdom in this grand exhibition.', '2026-03-01', '2026-03-10', 1000, 'image/Exop.jpg'),
-(4, 'Formula 1 Grand Prix', 'Sports', 'Diriyah', 'Historic Diriyah', 'The thrilling electric street racing series set against the stunning backdrop of Diriyah.', '2025-11-20', '2025-11-21', 600, 'image/Formula.jpg');
-
+INSERT INTO `events` (`EventID`, `EventName`, `Category`, `City`, `Location`, `Description`, `StartDate`, `EndDate`, `AvailableTickets`, `ImageURL`, `Price`) VALUES
+(1, 'Riyadh Music Festival', 'Music', 'Riyadh', 'Riyadh Boulevard', 'The largest music festival in the Middle East featuring local and international acts.', '2025-12-10', '2025-12-15', 500, 'image/MDLBEAST.jpg', 250.00),
+(2, 'Boulevard World', 'Entertainment', 'Riyadh', 'Riyadh Season Zone', 'A massive entertainment zone featuring diverse global experiences, massive rides, and international restaurants.', '2025-10-15', '2026-03-30', 9999, 'image/boulevardw.jpg', 500.00),
+(3, 'Saudi Tech Expo', 'Technology', 'Riyadh', 'RIEC', 'Discover the latest innovations and technologies transforming the Kingdom in this grand exhibition.', '2026-03-01', '2026-03-10', 1000, 'image/Exop.jpg', 100.00),
+(4, 'Formula 1 Grand Prix', 'Sports', 'Diriyah', 'Historic Diriyah', 'The thrilling electric street racing series set against the stunning backdrop of Diriyah.', '2025-11-20', '2025-11-21', 600, 'image/Formula.jpg', 200.00);
 -- --------------------------------------------------------
 
 --

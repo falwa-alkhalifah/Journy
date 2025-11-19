@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 18, 2025 at 08:56 AM
+-- Generation Time: Nov 19, 2025 at 09:03 AM
 -- Server version: 5.7.24
 -- PHP Version: 8.3.1
 
@@ -51,7 +51,7 @@ CREATE TABLE `events` (
   `EndDate` date DEFAULT NULL,
   `AvailableTickets` int(11) NOT NULL DEFAULT '0',
   `ImageURL` varchar(255) DEFAULT NULL,
-  `Price` decimal(10,2) NOT NULL DEFAULT 0.00
+  `Price` decimal(10,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -59,10 +59,11 @@ CREATE TABLE `events` (
 --
 
 INSERT INTO `events` (`EventID`, `EventName`, `Category`, `City`, `Location`, `Description`, `StartDate`, `EndDate`, `AvailableTickets`, `ImageURL`, `Price`) VALUES
-(1, 'Riyadh Music Festival', 'Music', 'Riyadh', 'Riyadh Boulevard', 'The largest music festival in the Middle East featuring local and international acts.', '2025-12-10', '2025-12-15', 500, 'image/MDLBEAST.jpg', 250.00),
-(2, 'Boulevard World', 'Entertainment', 'Riyadh', 'Riyadh Season Zone', 'A massive entertainment zone featuring diverse global experiences, massive rides, and international restaurants.', '2025-10-15', '2026-03-30', 9999, 'image/boulevardw.jpg', 500.00),
-(3, 'Saudi Tech Expo', 'Technology', 'Riyadh', 'RIEC', 'Discover the latest innovations and technologies transforming the Kingdom in this grand exhibition.', '2026-03-01', '2026-03-10', 1000, 'image/Exop.jpg', 100.00),
-(4, 'Formula 1 Grand Prix', 'Sports', 'Diriyah', 'Historic Diriyah', 'The thrilling electric street racing series set against the stunning backdrop of Diriyah.', '2025-11-20', '2025-11-21', 600, 'image/Formula.jpg', 200.00);
+(1, 'Riyadh Music Festival', 'Music', 'Riyadh', 'Riyadh Boulevard', 'The largest music festival in the Middle East featuring local and international acts.', '2025-12-10', '2025-12-15', 500, 'image/MDLBEAST.jpg', '250.00'),
+(2, 'Boulevard World', 'Entertainment', 'Riyadh', 'Riyadh Season Zone', 'A massive entertainment zone featuring diverse global experiences, massive rides, and international restaurants.', '2025-10-15', '2026-03-30', 9999, 'image/boulevardw.jpg', '500.00'),
+(3, 'Saudi Tech Expo', 'Technology', 'Riyadh', 'RIEC', 'Discover the latest innovations and technologies transforming the Kingdom in this grand exhibition.', '2026-03-01', '2026-03-10', 1000, 'image/Exop.jpg', '100.00'),
+(4, 'Formula 1 Grand Prix', 'Sports', 'Diriyah', 'Historic Diriyah', 'The thrilling electric street racing series set against the stunning backdrop of Diriyah.', '2025-11-20', '2025-11-21', 600, 'image/Formula.jpg', '200.00');
+
 -- --------------------------------------------------------
 
 --
@@ -138,6 +139,7 @@ CREATE TABLE `places` (
   `DistanceFromEvent` decimal(5,2) DEFAULT NULL,
   `PriceRange` enum('$','$$','$$$') DEFAULT '$$',
   `Rating` decimal(2,1) DEFAULT '0.0',
+  `LocallyOwned` tinyint(1) DEFAULT '0',
   `ImageURL` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -145,15 +147,15 @@ CREATE TABLE `places` (
 -- Dumping data for table `places`
 --
 
-INSERT INTO `places` (`PlaceID`, `EventID`, `Name`, `Type`, `City`, `DistanceFromEvent`, `PriceRange`, `Rating`, `ImageURL`) VALUES
-(1, NULL, 'The Globe', 'Restaurant', 'Riyadh', '1.20', '$$$', '4.5', 'image/TheGlobe.jpg'),
-(2, NULL, 'Lazy Cat', 'Restaurant', 'Riyadh', '6.00', '$$', '4.3', 'image/lazycat.webp'),
-(3, NULL, 'Public', 'Restaurant', 'Riyadh', '3.90', '$$$', '4.8', 'image/public.jpg'),
-(4, NULL, 'Oulu', 'Restaurant', 'Riyadh', '2.00', '$$$', '4.5', 'image/oulu.jpg'),
-(5, NULL, 'Ritz-Carlton', 'Hotel', 'Riyadh', '3.50', '$$$', '4.8', 'image/ritz.jpg'),
-(6, NULL, 'Movenpick Hotel And Residences Riyadh', 'Hotel', 'Riyadh', '6.00', '$$', '4.3', 'image/hotel.jpg'),
-(7, NULL, 'Double Tree', 'Hotel', 'Riyadh', '1.90', '$$$', '4.5', 'image/doubletree.webp'),
-(8, NULL, 'Four Seasons', 'Hotel', 'Diriyah', '3.00', '$$', '4.2', 'image/FourSeasons.webp');
+INSERT INTO `places` (`PlaceID`, `EventID`, `Name`, `Type`, `City`, `DistanceFromEvent`, `PriceRange`, `Rating`, `LocallyOwned`, `ImageURL`) VALUES
+(1, NULL, 'The Globe', 'Restaurant', 'Riyadh', '1.20', '$$$', '4.5', 1, 'image/TheGlobe.jpg'),
+(2, NULL, 'Lazy Cat', 'Restaurant', 'Riyadh', '6.00', '$$', '4.3', 0, 'image/lazycat.webp'),
+(3, NULL, 'Public', 'Restaurant', 'Riyadh', '3.90', '$$$', '4.8', 0, 'image/public.jpg'),
+(4, NULL, 'Oulu', 'Restaurant', 'Riyadh', '2.00', '$$$', '4.5', 1, 'image/oulu.jpg'),
+(5, NULL, 'Ritz-Carlton', 'Hotel', 'Riyadh', '3.50', '$$$', '4.8', 0, 'image/ritz.jpg'),
+(6, NULL, 'Movenpick Hotel And Residences Riyadh', 'Hotel', 'Riyadh', '6.00', '$$', '4.3', 0, 'image/hotel.jpg'),
+(7, NULL, 'Double Tree', 'Hotel', 'Riyadh', '1.90', '$$$', '4.5', 0, 'image/doubletree.webp'),
+(8, NULL, 'Four Seasons', 'Hotel', 'Diriyah', '3.00', '$$', '4.2', 1, 'image/FourSeasons.webp');
 
 -- --------------------------------------------------------
 

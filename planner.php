@@ -78,7 +78,7 @@ $view_journey_id = isset($_GET['view']) ? intval($_GET['view']) : 0;
             <div class="journey-details" style="padding:25px;">
                 <?php while($d = $days->fetch_assoc()): ?>
                     <div class="itinerary">
-                        <h3 style="color:var(--green-dark);margin-bottom:8px;">Day <?= $d['dayNumber'] ?></h3>
+                        <h3 style="color:var(--green-dark);margin-bottom:8px;">Day <?= $d['DayNumber'] ?></h3>
                         <?php
                         $items = $link->query("
                             SELECT ji.*, 
@@ -87,7 +87,7 @@ $view_journey_id = isset($_GET['view']) ? intval($_GET['view']) : 0;
                             JOIN reservations r ON r.reservationID = ji.reservationID
                             LEFT JOIN events e ON r.eventID = e.eventID
                             LEFT JOIN places p ON r.placeID = p.placeID
-                            WHERE ji.dayID={$d['dayID']}
+                            WHERE ji.dayID={$d['DayID']}
                         ");
                         
                         if($items->num_rows > 0): ?>

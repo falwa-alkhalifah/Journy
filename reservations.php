@@ -1,14 +1,7 @@
 <?php
-
-
-
 include 'db_config.php';
 
-
-
 $current_user_id = 1;
-
-
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_reservation'])) {
 
@@ -18,15 +11,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_reservation']))
 
     $tickets_to_restore = 0;
 
-    
-
     if ($res_id_to_cancel) {
 
         $link->begin_transaction();
 
         try {
-
-            // Check if EventID exists before trying to fetch details
 
             $sql_fetch = "SELECT EventID, NumberOfTickets FROM Reservations WHERE ReservationID = ? AND UserID = ?";
 
@@ -42,17 +31,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_reservation']))
 
             mysqli_stmt_close($stmt_fetch);
 
-            
-
             if ($reservation_details) {
 
                 $event_id_to_restore = $reservation_details['EventID'];
 
                 $tickets_to_restore = $reservation_details['NumberOfTickets'];
-
-                
-
-                // Delete the reservation
 
                 $sql_delete = "DELETE FROM Reservations WHERE ReservationID = ? AND UserID = ?";
 
@@ -61,10 +44,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_reservation']))
                 mysqli_stmt_bind_param($stmt_delete, "ii", $res_id_to_cancel, $current_user_id);
 
                 mysqli_stmt_execute($stmt_delete);
-
-                
-
-                // Restore tickets only if it was an Event reservation
 
                 if ($event_id_to_restore !== NULL) {
 
@@ -77,8 +56,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_reservation']))
                     mysqli_stmt_execute($stmt_restore);
 
                 }
-
-
 
                 $link->commit();
 
@@ -94,8 +71,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_reservation']))
 
             }
 
-
-
         } catch (Exception $e) {
 
             $link->rollback();
@@ -110,71 +85,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_reservation']))
 
 }
 
-
-
 $confirmed_reservations = [];
 
 $pending_reservations = [];
 
-
-
 $sql = "
-
     SELECT
-
         r.ReservationID,
-
         r.UserID,
-
         r.EventID,
-
         r.PlaceID,
-
         r.NumberOfTickets,
-
         r.BookingDate,
-
         r.Status,
-
         e.EventName,
-
         e.City AS EventCity,
-
         e.Location AS EventLocation,
-
-        e.Price AS EventPrice,  /* 🌟 ADDED: Fetch Event Price */
-
+        e.Price AS EventPrice,  
         p.Name AS PlaceName,
-
         p.Type AS PlaceType,
-
         p.City AS PlaceCity,
-
         p.PriceRange
-
     FROM
-
         reservations r
-
     LEFT JOIN
-
         events e ON r.EventID = e.EventID
-
     LEFT JOIN
-
         places p ON r.PlaceID = p.PlaceID
-
     WHERE
-
         r.UserID = ?
-
     ORDER BY
-
         r.BookingDate DESC
-
 ";
-
-
 
 if ($stmt = $link->prepare($sql)) {
 
@@ -183,8 +125,6 @@ if ($stmt = $link->prepare($sql)) {
     $stmt->execute();
 
     $result = $stmt->get_result();
-
-
 
     while ($row = $result->fetch_assoc()) {
 
@@ -198,7 +138,7 @@ if ($stmt = $link->prepare($sql)) {
 
             $row['ItemReferralID'] = $row['EventID'];
 
-            $row['ItemPrice'] = $row['EventPrice']; // Store price for use in card rendering
+            $row['ItemPrice'] = $row['EventPrice']; 
 
         } elseif ($row['PlaceID'] !== NULL) {
 
@@ -210,7 +150,7 @@ if ($stmt = $link->prepare($sql)) {
 
             $row['ItemReferralID'] = $row['PlaceID'];
 
-            $row['ItemPrice'] = 0.00; // Price logic for places is hardcoded below
+            $row['ItemPrice'] = 0.00; 
 
         } else {
 
@@ -225,8 +165,6 @@ if ($stmt = $link->prepare($sql)) {
             $row['ItemPrice'] = 0.00;
 
         }
-
-
 
         if ($row['Status'] === 'Confirmed') {
 
@@ -248,8 +186,6 @@ if ($stmt = $link->prepare($sql)) {
 
 }
 
-
-
 function renderReservationCard($reservation, $type) {
 
     $id = $reservation['ReservationID'];
@@ -260,19 +196,11 @@ function renderReservationCard($reservation, $type) {
 
     $booking_date = date("M d, Y", strtotime($reservation['BookingDate']));
 
-    $tickets = $reservation['NumberOfTickets'];
+    $tickets = $reservation['NumberOfTickets'];    
 
-    
-
-    // --- PRICE CALCULATIONS ---
-
-    $amount_due = "350"; // Hardcoded for place/hotel pending
-
-    
+    $amount_due = "350"; 
 
     if ($reservation['ItemType'] === 'Event') {
-
-        // 🌟 CALCULATE TOTAL PAID FOR EVENTS
 
         $item_price = $reservation['ItemPrice'];
 
@@ -280,15 +208,9 @@ function renderReservationCard($reservation, $type) {
 
     } else {
 
-        // Use hardcoded value for places/hotels
-
         $total_paid = "400"; 
 
     }
-
-    // -------------------------
-
-
 
     $details = '';
 
@@ -298,15 +220,11 @@ function renderReservationCard($reservation, $type) {
 
     $referral_id = $reservation['ItemReferralID'];
 
-
-
     if ($type === 'confirmed') {
 
         $status_color = '#28a745';
 
-        $status_text = 'Confirmed & Paid';
-
-        
+        $status_text = 'Confirmed & Paid';        
 
         if ($reservation['ItemType'] === 'Event') { 
 
@@ -336,7 +254,7 @@ function renderReservationCard($reservation, $type) {
 
              ";
 
-        } else { // Restaurant/Other Place
+        } else { 
 
              $details = "
 
@@ -356,9 +274,7 @@ function renderReservationCard($reservation, $type) {
 
         $actions = '<button class="cancel-btn" data-id="'.$id.'">Cancel</button>'; 
 
-
-
-    } else { // Pending reservations
+    } else { 
 
         if ($reservation['ItemType'] === 'Event') { 
 
@@ -388,7 +304,7 @@ function renderReservationCard($reservation, $type) {
 
              $target_link = "place-details.php?id=" . $referral_id; 
 
-        } else { // Restaurant/Other Place
+        } else { 
 
              $details = "
 
@@ -404,13 +320,9 @@ function renderReservationCard($reservation, $type) {
 
         }
 
-
-
         $actions = '<button class="btn-small" onclick="goToDetails(\''.$target_link.'\')">'.$reserve_btn_text.'</button><button class="cancel-btn" data-id="'.$id.'">Cancel</button>';
 
     }
-
-
 
     echo <<<HTML
 
@@ -494,8 +406,6 @@ HTML;
 
 </head>
 
-
-
 <body>
 
 <header>
@@ -524,8 +434,6 @@ HTML;
 
 </header>
 
-
-
 <main>
 
     <section class="search-section">
@@ -533,8 +441,6 @@ HTML;
     <input type="text" id="searchInput" placeholder="Search reservations...">
 
   </section>
-
-
 
 <?php if (isset($_GET['cancel_success'])): ?>
 
@@ -546,8 +452,6 @@ HTML;
 
 <?php endif; ?>
 
-
-
 <?php if (isset($_GET['cancel_error'])): ?>
 
     <div style="text-align: center; color: #dc3545; font-weight: bold; margin-bottom: 20px;">
@@ -557,8 +461,6 @@ HTML;
     </div>
 
 <?php endif; ?>
-
-
 
 <section class="reservations-section">
 
@@ -588,8 +490,6 @@ HTML;
 
 </section>
 
-
-
 <section class="reservations-section">
 
   <h2 class="section-title">💳 Pending Reservations</h2>
@@ -618,8 +518,6 @@ HTML;
 
 </section>
 
-
-
 <p class="empty-message" id="emptyMessage" style="display:none;">
 
   No reservations match your search.
@@ -628,15 +526,11 @@ HTML;
 
 </main>
 
-
-
 <footer>
 
   <p>&copy; 2025 Journy. All rights reserved.</p>
 
 </footer>
-
-
 
 <form id="cancelForm" action="reservations.php" method="POST">
 
@@ -645,8 +539,6 @@ HTML;
     <input type="hidden" name="reservation_id" id="cancelReservationId">
 
 </form>
-
-
 
 <script>
 
@@ -659,8 +551,6 @@ const emptyMessage = document.getElementById('emptyMessage');
 const cancelForm = document.getElementById('cancelForm');
 
 const cancelReservationIdInput = document.getElementById('cancelReservationId');
-
-
 
 searchInput.addEventListener('keyup', () => {
 
@@ -690,15 +580,11 @@ searchInput.addEventListener('keyup', () => {
 
 });
 
-
-
 function goToDetails(url) {
 
     window.location.href = url;
 
 }
-
-
 
 document.querySelectorAll('.cancel-btn').forEach(button => {
 

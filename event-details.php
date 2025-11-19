@@ -1,18 +1,11 @@
 <?php
-
-
-
 include 'db_config.php';
-
-
 
 $event = null;
 
 $show_popup = false;
 
 $reservation_message = "";
-
-
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 
@@ -22,21 +15,13 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 
 }
 
-
-
 $event_id = $_GET['id'];
-
-
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reserve'])) {
 
-    $user_id = 1; // Hardcoded user ID
+    $user_id = 1; 
 
     $num_tickets = filter_input(INPUT_POST, 'tickets', FILTER_VALIDATE_INT);
-
-    
-
-    // 1. Fetch tickets and price for validation
 
     $sql_check = "SELECT AvailableTickets, EventName, Price FROM Events WHERE EventID = ?";
 
@@ -59,8 +44,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reserve'])) {
         $link->begin_transaction();
 
         try {
-
-            // 2. Update available tickets
 
             $sql_update_event = "UPDATE Events SET AvailableTickets = AvailableTickets - ? WHERE EventID = ?";
 
@@ -88,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reserve'])) {
             if (mysqli_stmt_affected_rows($stmt_insert_reservation) === 0) {
 
                 throw new Exception("Failed to insert new reservation.");
-                
+
             }
 
             mysqli_stmt_close($stmt_insert_reservation);
@@ -107,8 +90,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reserve'])) {
 
             $link->rollback();
 
-            // Display the specific exception message
-
             $reservation_message = "Reservation error: Could not complete the process. " . $e->getMessage();
 
         }
@@ -120,12 +101,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reserve'])) {
     }
 
 }
-
-
-
-
-
-// 4. Fetch event details including the new Price column
 
 $sql_event = "SELECT *, Price FROM Events WHERE EventID = ?";
 
@@ -155,15 +130,11 @@ if ($stmt = mysqli_prepare($link, $sql_event)) {
 
 }
 
-
-
 if (isset($_GET['success']) && $_GET['success'] == 1) {
 
     $show_popup = true;
 
 }
-
-
 
 $date_display = date('F j, Y', strtotime($event['StartDate']));
 
@@ -177,8 +148,6 @@ if ($event['EndDate'] && $event['StartDate'] !== $event['EndDate']) {
 $event_price = number_format($event['Price'] ?? 0, 2, '.', ''); 
 
 ?>
-
-
 
 <!DOCTYPE html>
 
@@ -220,8 +189,6 @@ $event_price = number_format($event['Price'] ?? 0, 2, '.', '');
 
 .popup-box button { background-color:#ff6b00;color:white;border:none;border-radius:8px;font-size:17px;padding:12px 30px;cursor:pointer; margin-top: 15px; }
 
-
-
 .event-container { padding:60px 100px; display:flex; flex-wrap:wrap; justify-content:center; gap:60px; align-items:flex-start; max-width:1400px; margin:auto;}
 
 .event-image-area { flex:1; min-width:550px; max-width:650px; text-align: center; } 
@@ -233,8 +200,6 @@ $event_price = number_format($event['Price'] ?? 0, 2, '.', '');
 </style>
 
 </head>
-
-
 
 <body>
 
@@ -262,8 +227,6 @@ $event_price = number_format($event['Price'] ?? 0, 2, '.', '');
 
 </header>
 
-
-
 <main>
 
     <section class="event-container">  
@@ -278,25 +241,17 @@ $event_price = number_format($event['Price'] ?? 0, 2, '.', '');
 
             <h3 style="color:#ff6b00;font-size:34px;font-family:'Playfair Display',serif;margin-bottom:25px;"><?php echo htmlspecialchars($event['EventName']); ?></h3>  
 
-            
-
             <p style="font-size:18px;margin-bottom:10px;"><strong>Date:</strong> <?php echo htmlspecialchars($date_display); ?></p>
 
             <p style="font-size:18px;margin-bottom:10px;"><strong>Location:</strong> <?php echo htmlspecialchars($event['Location']); ?>, <?php echo htmlspecialchars($event['City']); ?></p>
 
-
-
             <p style="font-size:18px;margin-bottom:20px;text-align:justify;"><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($event['Description'])); ?></p>
-
-    
 
             <?php if (!empty($reservation_message)): ?>
 
                 <p style="color: red; font-weight: bold;"><?php echo $reservation_message; ?></p>
 
             <?php endif; ?>
-
-
 
             <form action="event-details.php?id=<?php echo $event_id; ?>" method="POST">
 
@@ -308,15 +263,11 @@ $event_price = number_format($event['Price'] ?? 0, 2, '.', '');
 
                 </div>
 
-                
-
                 <p style="font-size:20px; margin-bottom: 25px; font-weight: bold;">
 
                     Total Cost: <span id="totalCost" style="color:#ff6b00;">SAR 0.00</span>
 
                 </p>
-
-
 
                 <button type="submit" name="reserve" style="background-color:#ff6b00;color:white;border:none;border-radius:8px;font-size:17px;padding:14px 35px;cursor:pointer;" <?php echo ($event['AvailableTickets'] <= 0) ? 'disabled' : ''; ?>>
 
@@ -332,15 +283,11 @@ $event_price = number_format($event['Price'] ?? 0, 2, '.', '');
 
 </main>
 
-
-
 <footer>
 
     <p>&copy; 2025 Journy. All rights reserved.</p>
 
 </footer>
-
-
 
 <div class="popup-overlay" id="popupOverlay">
 
@@ -362,11 +309,7 @@ $event_price = number_format($event['Price'] ?? 0, 2, '.', '');
 
 </div>
 
-
-
 <script>
-
-    // Get the event price from PHP (passed via data attribute or variable)
 
     const UNIT_PRICE = parseFloat("<?php echo $event_price; ?>");
 
@@ -374,53 +317,33 @@ $event_price = number_format($event['Price'] ?? 0, 2, '.', '');
 
     const totalCostSpan = document.getElementById('totalCost');
 
-
-
     function updateTotalPrice() {
 
         const numTickets = parseInt(ticketsInput.value) || 0;
 
         const total = numTickets * UNIT_PRICE;
 
-        // Format to SAR and two decimal places
-
         totalCostSpan.textContent = 'SAR ' + total.toFixed(2);
 
     }
 
-
-
-    // Update total price immediately on load and whenever input changes
-
     ticketsInput.addEventListener('input', updateTotalPrice);
 
-    updateTotalPrice(); // Initial calculation on page load
-
-
-
-    // Remove the success=1 URL parameter after showing the popup
+    updateTotalPrice(); 
 
     const urlParams = new URLSearchParams(window.location.search);
 
     if (urlParams.get('success') === '1') {
 
-        // Use replaceState to keep the history clean
-
         history.replaceState(null, '', window.location.pathname + window.location.search.replace(/&success=1|success=1&|success=1$/, ''));
 
     }
 
-
-
 </script>
-
-
 
 </body>
 
 </html>
-
-
 
 <?php
 

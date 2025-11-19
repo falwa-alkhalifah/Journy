@@ -1,4 +1,5 @@
 <?php
+ini_set('display_errors', 1);
 require 'db_config.php';
 $user_id = 1;
 $jid = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -9,8 +10,9 @@ $j = $link->query("SELECT * FROM journeys WHERE journeyID=$jid")->fetch_assoc();
 // Fetch days
 $days = $link->query("SELECT * FROM journey_days WHERE journeyID=$jid");
 
-// Fetch all reservations
-$all = $link->query("
+// Fetch all reservations and store them in an array
+$all_reservations = [];
+$all_result = $link->query("
     SELECT r.*, 
            COALESCE(e.eventName, p.name) AS name 
     FROM reservations r
@@ -18,6 +20,10 @@ $all = $link->query("
     LEFT JOIN places p ON r.placeID = p.placeID
     WHERE r.userID=$user_id
 ");
+
+while($r = $all_result->fetch_assoc()) {
+    $all_reservations[] = $r;
+}
 
 // REMOVE STOP
 if(isset($_POST['remove'])){
@@ -76,11 +82,11 @@ if(isset($_POST['save_changes'])){
 </header>
 
 <section class="edit-container">
-<h1 class="section-title">Edit Journey: <?= $j['journeyName'] ?></h1>
+<h1 class="section-title">Edit Journey: <?= $j['JourneyName'] ?></h1>
 <form method="POST">
 <?php while($d = $days->fetch_assoc()): ?>
 <div class="day-box">
-    <h3>Day <?= $d['dayNumber'] ?></h3>
+    <h3>Day <?= $d['DayNumber'] ?></h3>
 
     <?php
     $items = $link->query("
@@ -90,23 +96,23 @@ if(isset($_POST['save_changes'])){
         JOIN reservations r ON r.reservationID = ji.reservationID
         LEFT JOIN events e ON r.eventID = e.eventID
         LEFT JOIN places p ON r.placeID = p.placeID
-        WHERE ji.dayID={$d['dayID']}
+        WHERE ji.dayID={$d['DayID']}
     ");
     ?>
 
     <?php while($i=$items->fetch_assoc()): ?>
         <p><?= $i['rname'] ?>
-            <button name="remove" value="<?= $i['itemID'] ?>" class="remove-btn">Remove</button>
+            <button name="remove" value="<?= $i['ItemID'] ?>" class="remove-btn">Remove</button>
         </p>
     <?php endwhile; ?>
 
     <div class="add-panel">
-        <label>Add Stop to Day <?= $d['dayNumber'] ?></label>
-        <select name="add_item_day_<?= $d['dayID'] ?>">
+        <label>Add Stop to Day <?= $d['DayNumber'] ?></label>
+        <select name="add_item_day_<?= $d['DayID'] ?>">
             <option value="">Choose reservation</option>
-            <?php while($r = $all->fetch_assoc()): ?>
-            <option value="<?= $r['reservationID'] ?>"><?= $r['name'] ?></option>
-            <?php endwhile; $all->data_seek(0); ?>
+            <?php foreach($all_reservations as $r): ?>
+            <option value="<?= $r['ReservationID'] ?>"><?= $r['name'] ?></option>
+            <?php endforeach; ?>
         </select>
     </div>
 </div>

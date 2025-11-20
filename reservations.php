@@ -11,6 +11,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_reservation']))
 
     $tickets_to_restore = 0;
 
+    $cancellation_successful = false; 
+
     if ($res_id_to_cancel) {
 
         $link->begin_transaction();
@@ -37,6 +39,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_reservation']))
 
                 $tickets_to_restore = $reservation_details['NumberOfTickets'];
 
+                // DELETE RESERVATION
+
                 $sql_delete = "DELETE FROM Reservations WHERE ReservationID = ? AND UserID = ?";
 
                 $stmt_delete = mysqli_prepare($link, $sql_delete);
@@ -45,41 +49,71 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_reservation']))
 
                 mysqli_stmt_execute($stmt_delete);
 
-                if ($event_id_to_restore !== NULL) {
+                $rows_deleted = mysqli_stmt_affected_rows($stmt_delete);
 
-                    $sql_restore = "UPDATE Events SET AvailableTickets = AvailableTickets + ? WHERE EventID = ?";
+                mysqli_stmt_close($stmt_delete);
 
-                    $stmt_restore = mysqli_prepare($link, $sql_restore);
+                if ($rows_deleted > 0) {
 
-                    mysqli_stmt_bind_param($stmt_restore, "ii", $tickets_to_restore, $event_id_to_restore);
+                    // RESTORE TICKETS ONLY IF IT WAS AN EVENT
 
-                    mysqli_stmt_execute($stmt_restore);
+                    if ($event_id_to_restore !== NULL && $tickets_to_restore > 0) { 
+
+                        $sql_restore = "UPDATE Events SET AvailableTickets = AvailableTickets + ? WHERE EventID = ?";
+
+                        $stmt_restore = mysqli_prepare($link, $sql_restore);
+
+                        mysqli_stmt_bind_param($stmt_restore, "ii", $tickets_to_restore, $event_id_to_restore);
+
+                        mysqli_stmt_execute($stmt_restore);
+
+                        mysqli_stmt_close($stmt_restore);
+
+                    }
+
+                    // COMMIT & SET SUCCESS FLAG
+
+                    $link->commit();
+
+                    $cancellation_successful = true;
 
                 }
-
-                $link->commit();
-
-                header("Location: reservations.php?cancel_success=1");
-
-                exit();
-
-            } else {
-
-                header("Location: reservations.php?cancel_error=1");
-
-                exit();
 
             }
 
         } catch (Exception $e) {
 
+            // If any step failed, rollback
+
             $link->rollback();
+
+            $cancellation_successful = false;
+
+        }        
+
+        // Final redirection based on flag
+
+        if ($cancellation_successful) {
+
+            header("Location: reservations.php?cancel_success=1");
+
+            exit();
+
+        } else {
 
             header("Location: reservations.php?cancel_error=1");
 
             exit();
 
         }
+
+    } else {
+
+        // No reservation ID provided
+
+        header("Location: reservations.php?cancel_error=1");
+
+        exit();
 
     }
 
@@ -198,7 +232,9 @@ function renderReservationCard($reservation, $type) {
 
     $tickets = $reservation['NumberOfTickets'];    
 
-    $amount_due = "350"; 
+    $amount_due = "350"; // Placeholder value for demonstration purposes
+
+    // Calculate Total Paid
 
     if ($reservation['ItemType'] === 'Event') {
 
@@ -208,7 +244,7 @@ function renderReservationCard($reservation, $type) {
 
     } else {
 
-        $total_paid = "400"; 
+        $total_paid = "400"; // Placeholder for place total paid
 
     }
 
@@ -254,7 +290,7 @@ function renderReservationCard($reservation, $type) {
 
              ";
 
-        } else { 
+        } else { // Covers Restaurant and Unknown Place
 
              $details = "
 
@@ -288,7 +324,7 @@ function renderReservationCard($reservation, $type) {
 
             $reserve_btn_text = 'Reserve Now';
 
-            $target_link = "event-details.php?id=" . $referral_id; 
+            $target_link = "event_details.php?id=" . $referral_id; 
 
         } elseif ($reservation['ItemType'] === 'Hotel') { 
 
@@ -302,9 +338,9 @@ function renderReservationCard($reservation, $type) {
 
              $reserve_btn_text = 'Pay Now';
 
-             $target_link = "place-details.php?id=" . $referral_id; 
+             $target_link = "event_details.php?id=" . $referral_id . "&type=place"; 
 
-        } else { 
+        } elseif ($reservation['ItemType'] === 'Restaurant') { 
 
              $details = "
 
@@ -316,7 +352,21 @@ function renderReservationCard($reservation, $type) {
 
              $reserve_btn_text = 'Complete Booking';
 
-             $target_link = "place-details.php?id=" . $referral_id; 
+             $target_link = "event_details.php?id=" . $referral_id . "&type=place"; 
+
+        } else { // Unknown place type
+
+             $details = "
+
+                 <p>City: {$city} | Details Unknown | Date: {$booking_date}</p>
+
+                 <p>Amount Due: {$amount_due} SAR</p>
+
+             ";
+
+             $reserve_btn_text = 'View Details';
+
+             $target_link = "event_details.php?id=" . $referral_id . "&type=place"; 
 
         }
 
@@ -352,8 +402,6 @@ HTML;
 
 ?>
 
-
-
 <!DOCTYPE html>
 
 <html lang="en">
@@ -367,6 +415,7 @@ HTML;
 <title>Journy - Reservations</title>
 
 <link rel="stylesheet" href="style.css">
+
 <link rel="stylesheet" href="style2.css">
 
 <style>
@@ -513,7 +562,7 @@ HTML;
 
     ?>
 
-  </div>
+    </div>
 
 </section>
 

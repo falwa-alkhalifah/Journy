@@ -181,9 +181,10 @@ INSERT INTO `reservations` (`ReservationID`, `UserID`, `EventID`, `PlaceID`, `Nu
 (1, 1, 4, NULL, 1, '2025-11-18 06:47:48', 'Confirmed'),
 (2, 1, 2, NULL, 1, '2025-11-18 06:48:12', 'Confirmed'),
 (3, 1, 3, NULL, 1, '2025-11-18 06:48:14', 'Confirmed'),
-(4, 1, 3, NULL, 1, '2025-11-18 06:48:15', 'Confirmed');
-
--- --------------------------------------------------------
+(4, 1, 3, NULL, 1, '2025-11-18 06:48:15', 'Pending'),
+(5, 1, NULL, 5, 2, '2025-11-19 10:00:00', 'Confirmed'), 
+(6, 1, NULL, 1, 4, '2025-11-19 11:30:00', 'Pending'), 
+(7, 1, NULL, 7, 1, '2025-11-19 12:00:00', 'Pending'); 
 
 --
 -- Table structure for table `users`
@@ -366,3 +367,45 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+--
+-- Table structure for table `EventVocabulary`
+--
+CREATE TABLE `EventVocabulary` (
+    `VocabularyID` INT(11) NOT NULL,
+    `EventID` INT(11) NOT NULL,
+    `ArabicWord` VARCHAR(100) NOT NULL,
+    `EnglishTranslation` VARCHAR(100) NOT NULL,
+    `ContextPhrase` VARCHAR(255)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `EventVocabulary` (`EventID`, `ArabicWord`, `EnglishTranslation`, `ContextPhrase`) VALUES
+(1, 'Haflah', 'Concert/Party', 'Major gathering or celebration'),
+(1, 'Musiqa', 'Music', 'Used when asking about the performance'),
+(1, 'Saa''eed', 'Happy', 'To wish someone a pleasant time'),
+(1, 'Tathkira', 'Ticket', 'Your pass to enter the venue');
+
+INSERT INTO `EventVocabulary` (`EventID`, `ArabicWord`, `EnglishTranslation`, `ContextPhrase`) VALUES
+(2, 'Mintaqah', 'Zone/Area', 'Used to navigate different themed zones in Boulevard World'),
+(2, 'Ard', 'Show/Performance', 'Refers to concerts, dances, and live shows'),
+(2, 'Tathkirah', 'Ticket', 'Needed for rides, attractions, or special events'),
+(2, 'Tajribah', 'Experience', 'Describes immersive or interactive activities');
+
+
+INSERT INTO `EventVocabulary` (`EventID`, `ArabicWord`, `EnglishTranslation`, `ContextPhrase`) VALUES
+(3, 'Taqniyah', 'Technology', 'General term used throughout the tech expo'),
+(3, 'Ibtikaar', 'Innovation', 'Refers to creative and advanced tech solutions'),
+(3, 'Manssah', 'Booth/Platform', 'Used when navigating exhibitor stands'),
+(3, 'Ard', 'Live Demo', 'When companies demonstrate their products live');
+
+INSERT INTO `EventVocabulary` (`EventID`, `ArabicWord`, `EnglishTranslation`, `ContextPhrase`) VALUES
+(4, 'Sibaaq', 'Race', 'Refers to the main Formula One event'),
+(4, 'Saaiq', 'Driver', 'Used to refer to F1 drivers'),
+(4, 'Masaar', 'Track/Circuit', 'Refers to the Formula One racing track'),
+(4, 'Sarʿah', 'Speed', 'Describes how fast the Formula One cars go');
+
+
+ALTER TABLE `EventVocabulary`
+  ADD CONSTRAINT `eventvocabulary_ibfk_1` FOREIGN KEY (`EventID`) REFERENCES `events` (`EventID`) ON DELETE CASCADE;
+
+COMMIT;

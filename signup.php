@@ -2,6 +2,12 @@
 session_start();
 require_once 'db_config.php';
 
+// If user is already logged in, redirect to home
+if (isset($_SESSION['user_id'])) {
+    header('Location: index.php');
+    exit;
+}
+
 function h($v){ return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
 
 $errors = ['name'=>'','email'=>'','password'=>'','form'=>''];

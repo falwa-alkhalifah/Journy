@@ -1,5 +1,10 @@
 <?php
-include 'db_config.php';
+session_start();
+require_once 'db_config.php';
+require_once 'session_check.php';
+
+checkAuth(); // Users must be logged in to view details and make reservations
+$user_id = $_SESSION['user_id'];
 
 // Default variables
 
@@ -519,27 +524,23 @@ $event_price = $is_event ? $unit_price : 0.00;
 <body>
 
 <header>
-
-    <nav>
-
-        <div class="logo">Journy</div>
-
-        <ul class="nav-links">
-
-            <li><a href="index.php">Home</a></li>
-
-            <li><a href="discover.php">Discover</a></li>
-
-            <li><a href="planner.php">Planner</a></li>
-
-            <li><a href="reservations.php">Reservations</a></li>  
-
-            <li><a href="login.php">Log out</a></li>
-
-        </ul>
-
-    </nav>
-
+  <nav>
+    <div class="logo">Journy</div>
+    <ul class="nav-links">
+      <li><a href="index.php">Home</a></li>
+      <li><a href="discover.php">Discover</a></li>
+      <li><a href="planner.php">Planner</a></li>
+      <li><a href="reservations.php">Reservations</a></li>
+      <?php if (isLoggedIn()): ?>
+        <?php if ($_SESSION['role'] === 'admin'): ?>
+          <li><a href="admin.php">Admin</a></li>
+        <?php endif; ?>
+        <li><a href="logout.php">Log out</a></li>
+      <?php else: ?>
+        <li><a href="login.php">Log in</a></li>
+      <?php endif; ?>
+    </ul>
+  </nav>
 </header>
 
 <main>

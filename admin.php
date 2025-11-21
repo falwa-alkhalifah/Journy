@@ -1,12 +1,9 @@
 <?php
 session_start();
 require_once 'db_config.php';
+require_once 'session_check.php';
 
-// إذا المستخدم مو admin → رجعيه للـ login
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header("Location: login.php");
-    exit;
-}
+checkAdmin(); // This ensures only admins can access
 
 $success = "";
 $error = "";
@@ -98,6 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <li><a href="planner.php">Planner</a></li>
       <li><a href="reservations.php">Reservations</a></li>
       <li><a href="admin.php" class="active">Admin</a></li>
+      <li><a href="logout.php">Log out</a></li>
     </ul>
   </nav>
 </header>

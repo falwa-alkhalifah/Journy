@@ -1,6 +1,10 @@
 <?php
-require 'db_config.php';
-$user_id = 1;
+session_start();
+require_once 'db_config.php';
+require_once 'session_check.php';
+
+checkAuth();
+$user_id = $_SESSION['user_id'];
 
 // Fetch journeys
 $journeys = $link->query("
@@ -43,7 +47,14 @@ $view_journey_id = isset($_GET['view']) ? intval($_GET['view']) : 0;
       <li><a href="discover.php">Discover</a></li>
       <li><a href="planner.php">Planner</a></li>
       <li><a href="reservations.php">Reservations</a></li>
-      <li><a href="login.php">Log in</a></li>
+      <?php if (isLoggedIn()): ?>
+        <?php if ($_SESSION['role'] === 'admin'): ?>
+          <li><a href="admin.php">Admin</a></li>
+        <?php endif; ?>
+        <li><a href="logout.php">Log out</a></li>
+      <?php else: ?>
+        <li><a href="login.php">Log in</a></li>
+      <?php endif; ?>
     </ul>
   </nav>
 </header>

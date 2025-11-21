@@ -1,5 +1,7 @@
 <?php
-require 'db_config.php';
+session_start();
+require_once 'db_config.php';
+require_once 'session_check.php';
 
 // Get search and filter parameters
 $search = isset($_GET['search']) ? $link->real_escape_string($_GET['search']) : '';
@@ -198,7 +200,14 @@ $hotels = $link->query($places_query . " AND type='hotel'");
       <li><a href="discover.php">Discover</a></li>
       <li><a href="planner.php">Planner</a></li>
       <li><a href="reservations.php">Reservations</a></li>
-      <li><a href="login.php">Log in</a></li>
+      <?php if (isLoggedIn()): ?>
+        <?php if ($_SESSION['role'] === 'admin'): ?>
+          <li><a href="admin.php">Admin</a></li>
+        <?php endif; ?>
+        <li><a href="logout.php">Log out</a></li>
+      <?php else: ?>
+        <li><a href="login.php">Log in</a></li>
+      <?php endif; ?>
     </ul>
   </nav>
 </header>
@@ -257,7 +266,7 @@ $hotels = $link->query($places_query . " AND type='hotel'");
                 <img src="<?= !empty($e['ImageURL']) ? $e['ImageURL'] : 'image/default_event.jpg' ?>" alt="<?= $e['EventName'] ?>">
                 <h3><?= $e['EventName'] ?></h3>
                 <p><?= $e['City'] ?></p>
-                <a href="event-details.php?id=<?= $e['EventID'] ?>">
+                <a href="event_details.php?id=<?= $e['EventID'] ?>">
                     <button class="details-btn">Details</button>
                 </a>
             </div>
@@ -278,7 +287,7 @@ $hotels = $link->query($places_query . " AND type='hotel'");
                 <p><?= $r['City'] ?></p>
                 <p>Price: <?= str_repeat('$', strlen($r['PriceRange'])) ?> | Distance: <?= $r['DistanceFromEvent'] ?>km</p>
                 <?php if($r['LocallyOwned']): ?><p style="color: var(--green-mid);">🏠 Locally Owned</p><?php endif; ?>
-                <a href="event-details.php?id=<?= $r['PlaceID'] ?>&type=place">
+                <a href="event_details.php?id=<?= $r['PlaceID'] ?>&type=place">
                     <button class="details-btn">Details</button>
                 </a>
             </div>
@@ -299,7 +308,7 @@ $hotels = $link->query($places_query . " AND type='hotel'");
                 <p><?= $h['City'] ?></p>
                 <p>Price: <?= str_repeat('$', strlen($h['PriceRange'])) ?> | Distance: <?= $h['DistanceFromEvent'] ?>km</p>
                 <?php if($h['LocallyOwned']): ?><p style="color: var(--green-mid);">🏠 Locally Owned</p><?php endif; ?>
-                <a href="event-details.php?id=<?= $h['PlaceID'] ?>&type=place">
+                <a href="event_details.php?id=<?= $h['PlaceID'] ?>&type=place">
                     <button class="details-btn">Details</button>
                 </a>
             </div>

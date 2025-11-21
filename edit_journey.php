@@ -1,8 +1,20 @@
 <?php
-ini_set('display_errors', 1);
-require 'db_config.php';
-$user_id = 1;
+session_start();
+require_once 'db_config.php';
+require_once 'session_check.php';
+
+checkAuth();
+$user_id = $_SESSION['user_id'];
+
+
 $jid = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+// Verify the journey belongs to the current user
+$j = $link->query("SELECT * FROM journeys WHERE journeyID=$jid AND userID=$user_id")->fetch_assoc();
+if (!$j) {
+    header("Location: planner.php");
+    exit;
+}
 
 // Fetch journey
 $j = $link->query("SELECT * FROM journeys WHERE journeyID=$jid")->fetch_assoc();
@@ -76,7 +88,14 @@ if(isset($_POST['save_changes'])){
       <li><a href="discover.php">Discover</a></li>
       <li><a href="planner.php">Planner</a></li>
       <li><a href="reservations.php">Reservations</a></li>
-      <li><a href="login.php">Log in</a></li>
+      <?php if (isLoggedIn()): ?>
+        <?php if ($_SESSION['role'] === 'admin'): ?>
+          <li><a href="admin.php">Admin</a></li>
+        <?php endif; ?>
+        <li><a href="logout.php">Log out</a></li>
+      <?php else: ?>
+        <li><a href="login.php">Log in</a></li>
+      <?php endif; ?>
     </ul>
   </nav>
 </header>

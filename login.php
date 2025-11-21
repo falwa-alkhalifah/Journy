@@ -2,6 +2,16 @@
 session_start();
 require_once 'db_config.php';
 
+// If user is already logged in, redirect to appropriate page
+if (isset($_SESSION['user_id'])) {
+    if ($_SESSION['role'] === 'admin') {
+        header('Location: admin.php');
+    } else {
+        header('Location: index.php');
+    }
+    exit;
+}
+
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

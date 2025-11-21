@@ -1,5 +1,8 @@
 <?php
-include 'db_config.php';
+session_start();
+require_once 'db_config.php';
+require_once 'session_check.php';
+
 function getFeaturedEvents() {
     global $link;
     $sql = "SELECT EventID, EventName, City, StartDate, EndDate, ImageURL FROM Events ORDER BY StartDate DESC LIMIT 4";
@@ -86,12 +89,20 @@ main {
     <div class="logo">Journy</div>
     <ul class="nav-links">
       <li><a href="index.php">Home</a></li>
-      <li><a href="discover.html">Discover</a></li>
-      <li><a href="planner.html">Planner</a></li>
-      <li><a href="reservations.html">Reservations</a></li>
-      <li><a href="login.html">Log in</a></li>
+      <li><a href="discover.php">Discover</a></li>
+      <li><a href="planner.php">Planner</a></li>
+      <li><a href="reservations.php">Reservations</a></li>
+      <?php if (isLoggedIn()): ?>
+        <?php if ($_SESSION['role'] === 'admin'): ?>
+          <li><a href="admin.php">Admin</a></li>
+        <?php endif; ?>
+        <li><a href="logout.php">Log out</a></li>
+      <?php else: ?>
+        <li><a href="login.php">Log in</a></li>
+      <?php endif; ?>
     </ul>
   </nav>
+
 
   <div class="hero">
     <h1>Discover Amazing Events Across Saudi Arabia</h1>
@@ -115,7 +126,7 @@ main {
                   <img src="<?php echo htmlspecialchars($event['ImageURL']); ?>" alt="<?php echo htmlspecialchars($event['EventName']); ?>">
                   <h3><?php echo htmlspecialchars($event['EventName']); ?></h3>
                   <p><?php echo htmlspecialchars($date_display); ?> | <?php echo htmlspecialchars($event['City']); ?></p>
-                  <a href="event-details.php?id=<?php echo htmlspecialchars($event['EventID']); ?>" class="btn-small">View Details</a>
+                  <a href="event_details.php?id=<?php echo htmlspecialchars($event['EventID']); ?>" class="btn-small">View Details</a>
               </div>
           <?php endforeach; ?>
       <?php else: ?>
@@ -133,7 +144,7 @@ main {
                   <img src="<?php echo htmlspecialchars($restaurant['ImageURL']); ?>" alt="<?php echo htmlspecialchars($restaurant['Name']); ?>">
                   <h3><?php echo htmlspecialchars($restaurant['Name']); ?></h3>
                   <p><?php echo htmlspecialchars($restaurant['City']); ?></p>
-                  <a href="place-details.php?id=<?php echo htmlspecialchars($restaurant['PlaceID']); ?>" class="btn-small">View Details</a>
+                  <a href="event_details.php?id=<?php echo htmlspecialchars($restaurant['PlaceID']); ?>" class="btn-small">View Details</a>
               </div>
           <?php endforeach; ?>
       <?php else: ?>
@@ -151,7 +162,7 @@ main {
                   <img src="<?php echo htmlspecialchars($hotel['ImageURL']); ?>" alt="<?php echo htmlspecialchars($hotel['Name']); ?>">
                   <h3><?php echo htmlspecialchars($hotel['Name']); ?></h3>
                   <p><?php echo htmlspecialchars($hotel['City']); ?></p>
-                  <a href="place-details.php?id=<?php echo htmlspecialchars($hotel['PlaceID']); ?>" class="btn-small">View Details</a>
+                  <a href="event_details.php?id=<?php echo htmlspecialchars($hotel['PlaceID']); ?>" class="btn-small">View Details</a>
               </div>
           <?php endforeach; ?>
       <?php else: ?>

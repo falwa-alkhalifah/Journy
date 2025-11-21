@@ -1,7 +1,10 @@
 <?php
-include 'db_config.php';
+session_start();
+require_once 'db_config.php';
+require_once 'session_check.php';
 
-$current_user_id = 1;
+checkAuth();
+$current_user_id = $_SESSION['user_id']; // Use session user_id
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_reservation'])) {
 
@@ -459,27 +462,23 @@ HTML;
 <body>
 
 <header>
-
   <nav>
-
     <div class="logo">Journy</div>
-
     <ul class="nav-links">
-
       <li><a href="index.php">Home</a></li>
-
       <li><a href="discover.php">Discover</a></li>
-
       <li><a href="planner.php">Planner</a></li>
-
       <li><a href="reservations.php">Reservations</a></li>
-
-      <li><a href="login.php">Log Out</a></li>
-
+      <?php if (isLoggedIn()): ?>
+        <?php if ($_SESSION['role'] === 'admin'): ?>
+          <li><a href="admin.php">Admin</a></li>
+        <?php endif; ?>
+        <li><a href="logout.php">Log out</a></li>
+      <?php else: ?>
+        <li><a href="login.php">Log in</a></li>
+      <?php endif; ?>
     </ul>
-
   </nav>
-
 </header>
 
 <main>

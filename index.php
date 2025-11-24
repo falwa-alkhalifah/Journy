@@ -144,7 +144,7 @@ main {
                   <img src="<?php echo htmlspecialchars($restaurant['ImageURL']); ?>" alt="<?php echo htmlspecialchars($restaurant['Name']); ?>">
                   <h3><?php echo htmlspecialchars($restaurant['Name']); ?></h3>
                   <p><?php echo htmlspecialchars($restaurant['City']); ?></p>
-                  <a href="event_details.php?id=<?php echo htmlspecialchars($restaurant['PlaceID']); ?>" class="btn-small">View Details</a>
+                  <a href="event_details.php?id=<?php echo htmlspecialchars($restaurant['PlaceID']); ?>&type=place" class="btn-small">View Details</a>
               </div>
           <?php endforeach; ?>
       <?php else: ?>
@@ -162,7 +162,7 @@ main {
                   <img src="<?php echo htmlspecialchars($hotel['ImageURL']); ?>" alt="<?php echo htmlspecialchars($hotel['Name']); ?>">
                   <h3><?php echo htmlspecialchars($hotel['Name']); ?></h3>
                   <p><?php echo htmlspecialchars($hotel['City']); ?></p>
-                  <a href="event_details.php?id=<?php echo htmlspecialchars($hotel['PlaceID']); ?>" class="btn-small">View Details</a>
+                  <a href="event_details.php?id=<?php echo htmlspecialchars($hotel['PlaceID']); ?>&type=place" class="btn-small">View Details</a>
               </div>
           <?php endforeach; ?>
       <?php else: ?>

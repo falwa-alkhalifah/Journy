@@ -4,25 +4,52 @@ require_once 'db_config.php';
 require_once 'session_check.php';
 
 // Get search and filter parameters
+$link = $GLOBALS['link']; 
 $search = isset($_GET['search']) ? $link->real_escape_string($_GET['search']) : '';
-$price_filter = isset($_GET['price']) ? $_GET['price'] : '';
-$distance_filter = isset($_GET['distance']) ? $_GET['distance'] : '';
-$local_filter = isset($_GET['local']) ? $_GET['local'] : '';
+$price_filter = isset($_GET['price']) ? $link->real_escape_string($_GET['price']) : '';
+$distance_filter = isset($_GET['distance']) ? $link->real_escape_string($_GET['distance']) : '';
+$local_filter = isset($_GET['local']) ? $link->real_escape_string($_GET['local']) : '';
 
 // Build events query with filters
-$events_query = "SELECT * FROM events WHERE 1=1";
+$events_query = "SELECT EventID, EventName, City, ImageURL, Price, LocallyOwned FROM events WHERE 1=1"; // التأكد من جلب عمود LocallyOwned و Price
+// تطبيق فلتر البحث النصي على Events
 if (!empty($search)) {
     $events_query .= " AND (EventName LIKE '%$search%' OR City LIKE '%$search%' OR Description LIKE '%$search%')";
 }
+
+// تطبيق فلتر نطاق السعر على سعر تذكرة EventID
+if (!empty($price_filter)) {
+    switch ($price_filter) {
+        case '$':
+            $events_query .= " AND Price <= 150.00"; 
+            break;
+        case '$$':
+            $events_query .= " AND Price > 150.00 AND Price <= 350.00"; 
+            break;
+        case '$$$':
+            $events_query .= " AND Price > 350.00"; 
+            break;
+    }
+}
+
+// تطبيق فلتر الأعمال المحلية على Events
+if (!empty($local_filter) && $local_filter === 'local') {
+    $events_query .= " AND LocallyOwned = 1";
+}
+
 
 // Build places query with filters
 $places_query = "SELECT * FROM places WHERE 1=1";
 if (!empty($search)) {
     $places_query .= " AND (Name LIKE '%$search%' OR City LIKE '%$search%')";
 }
+
+// 1. تصفية نطاق السعر (PriceRange)
 if (!empty($price_filter)) {
     $places_query .= " AND PriceRange = '$price_filter'";
 }
+
+// 2. تصفية المسافة (DistanceFromEvent)
 if (!empty($distance_filter)) {
     if ($distance_filter === 'near') {
         $places_query .= " AND DistanceFromEvent <= 3.00";
@@ -32,7 +59,9 @@ if (!empty($distance_filter)) {
         $places_query .= " AND DistanceFromEvent > 8.00";
     }
 }
-if (!empty($local_filter)) {
+
+// 3. تصفية الأعمال المحلية (LocallyOwned)
+if (!empty($local_filter) && $local_filter === 'local') {
     $places_query .= " AND LocallyOwned = 1";
 }
 
@@ -72,6 +101,7 @@ $hotels = $link->query($places_query . " AND type='hotel'");
 .card{
     text-align:center;
     min-width:250px;
+    min-height: 280px; 
 }
 .card img{
     width:100%;
@@ -80,16 +110,18 @@ $hotels = $link->query($places_query . " AND type='hotel'");
     border-radius:8px;
 }
 .details-btn{
-    background:var(--green-mid);
+    background: #ff6b00; 
     color:white;
     border:none;
     padding:8px 16px;
     border-radius:6px;
     cursor:pointer;
     margin-top:10px;
+    text-decoration: none; 
+    display: inline-block; 
 }
 .details-btn:hover{
-    background:var(--green-dark);
+    background: #e65c00;
 }
 
 /* Search and Filter Styles */
@@ -117,11 +149,13 @@ $hotels = $link->query($places_query . " AND type='hotel'");
     font-family: 'Poppins', sans-serif;
 }
 
+
 .filter-container {
     display: flex;
     gap: 15px;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: flex-end; 
 }
 
 .filter-group {
@@ -145,29 +179,27 @@ $hotels = $link->query($places_query . " AND type='hotel'");
 }
 
 .apply-filters {
-    background: var(--green-mid);
+    background: #ff6b00;
     color: white;
     border: none;
     padding: 8px 20px;
     border-radius: 6px;
     cursor: pointer;
     font-family: 'Poppins', sans-serif;
-    align-self: flex-end;
 }
 
 .apply-filters:hover {
-    background: var(--green-dark);
+    background: #e65c00;
 }
 
 .clear-filters {
-    background: var(--brown-subtle);
+    background: #888;
     color: white;
     border: none;
     padding: 8px 20px;
     border-radius: 6px;
     cursor: pointer;
     font-family: 'Poppins', sans-serif;
-    align-self: flex-end;
     text-decoration: none;
 }
 
@@ -178,7 +210,8 @@ $hotels = $link->query($places_query . " AND type='hotel'");
 .filter-actions {
     display: flex;
     gap: 10px;
-    align-self: flex-end;
+    align-items: center; 
+    padding-bottom: 2px; 
 }
 
 .no-results {
@@ -213,7 +246,6 @@ $hotels = $link->query($places_query . " AND type='hotel'");
 </header>
 
 <section class="discover-container">
-    <!-- Search and Filter Section -->
     <div class="search-filter-section">
         <form method="GET" action="discover.php">
             <div class="search-bar">
@@ -250,14 +282,13 @@ $hotels = $link->query($places_query . " AND type='hotel'");
                 </div>
                 
                 <div class="filter-actions">
-                    <button type="submit" class="apply-filters">Apply Filters</button>
+                    <button type="submit" class="apply-filters">Search and Filter</button> 
                     <a href="discover.php" class="clear-filters">Clear</a>
                 </div>
             </div>
         </form>
     </div>
 
-    <!-- Events Section -->
     <h1 class="section-title">Events</h1>
     <div class="lane">
     <?php if($events->num_rows > 0): ?>
@@ -266,9 +297,13 @@ $hotels = $link->query($places_query . " AND type='hotel'");
                 <img src="<?= !empty($e['ImageURL']) ? $e['ImageURL'] : 'image/default_event.jpg' ?>" alt="<?= $e['EventName'] ?>">
                 <h3><?= $e['EventName'] ?></h3>
                 <p><?= $e['City'] ?></p>
-                <a href="event_details.php?id=<?= $e['EventID'] ?>">
-                    <button class="details-btn">Details</button>
-                </a>
+                <?php if ($e['Price'] > 0): ?>
+                    <p>Price: SAR <?= number_format($e['Price'], 2) ?></p>
+                <?php endif; ?>
+                <?php if($e['LocallyOwned']): ?>
+                    <p style="color: var(--green-mid);">🏠 Locally Owned</p>
+                <?php endif; ?>
+                <a href="event_details.php?id=<?= $e['EventID'] ?>" class="details-btn">Details</a>
             </div>
         <?php endwhile; ?>
     <?php else: ?>
@@ -276,7 +311,6 @@ $hotels = $link->query($places_query . " AND type='hotel'");
     <?php endif; ?>
     </div>
 
-    <!-- Restaurants Section -->
     <h1 class="section-title">Restaurants</h1>
     <div class="lane">
     <?php if($restaurants->num_rows > 0): ?>
@@ -287,9 +321,7 @@ $hotels = $link->query($places_query . " AND type='hotel'");
                 <p><?= $r['City'] ?></p>
                 <p>Price: <?= str_repeat('$', strlen($r['PriceRange'])) ?> | Distance: <?= $r['DistanceFromEvent'] ?>km</p>
                 <?php if($r['LocallyOwned']): ?><p style="color: var(--green-mid);">🏠 Locally Owned</p><?php endif; ?>
-                <a href="event_details.php?id=<?= $r['PlaceID'] ?>&type=place">
-                    <button class="details-btn">Details</button>
-                </a>
+                <a href="event_details.php?id=<?= $r['PlaceID'] ?>&type=place" class="details-btn">Details</a>
             </div>
         <?php endwhile; ?>
     <?php else: ?>
@@ -297,7 +329,6 @@ $hotels = $link->query($places_query . " AND type='hotel'");
     <?php endif; ?>
     </div>
 
-    <!-- Hotels Section -->
     <h1 class="section-title">Hotels</h1>
     <div class="lane">
     <?php if($hotels->num_rows > 0): ?>
@@ -308,9 +339,7 @@ $hotels = $link->query($places_query . " AND type='hotel'");
                 <p><?= $h['City'] ?></p>
                 <p>Price: <?= str_repeat('$', strlen($h['PriceRange'])) ?> | Distance: <?= $h['DistanceFromEvent'] ?>km</p>
                 <?php if($h['LocallyOwned']): ?><p style="color: var(--green-mid);">🏠 Locally Owned</p><?php endif; ?>
-                <a href="event_details.php?id=<?= $h['PlaceID'] ?>&type=place">
-                    <button class="details-btn">Details</button>
-                </a>
+                <a href="event_details.php?id=<?= $h['PlaceID'] ?>&type=place" class="details-btn">Details</a>
             </div>
         <?php endwhile; ?>
     <?php else: ?>

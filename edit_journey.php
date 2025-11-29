@@ -6,25 +6,22 @@ require_once 'session_check.php';
 checkAuth();
 $user_id = $_SESSION['user_id'];
 
-
 $jid = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // Verify the journey belongs to the current user
-$j = $link->query("SELECT * FROM journeys WHERE journeyID=$jid AND userID=$user_id")->fetch_assoc();
-if (!$j) {
+$j = mysqli_query($link, "SELECT * FROM journeys WHERE journeyID=$jid AND userID=$user_id");
+if (!$j || mysqli_num_rows($j) === 0) {
     header("Location: planner.php");
     exit;
 }
-
-// Fetch journey
-$j = $link->query("SELECT * FROM journeys WHERE journeyID=$jid")->fetch_assoc();
+$j = mysqli_fetch_assoc($j);
 
 // Fetch days
-$days = $link->query("SELECT * FROM journey_days WHERE journeyID=$jid");
+$days = mysqli_query($link, "SELECT * FROM journey_days WHERE journeyID=$jid");
 
 // Fetch all reservations and store them in an array
 $all_reservations = [];
-$all_result = $link->query("
+$all_result = mysqli_query($link, "
     SELECT r.*, 
            COALESCE(e.eventName, p.name) AS name 
     FROM reservations r
@@ -33,14 +30,14 @@ $all_result = $link->query("
     WHERE r.userID=$user_id
 ");
 
-while($r = $all_result->fetch_assoc()) {
+while($r = mysqli_fetch_assoc($all_result)) {
     $all_reservations[] = $r;
 }
 
 // REMOVE STOP
 if(isset($_POST['remove'])){
     $id = intval($_POST['remove']);
-    $link->query("DELETE FROM journey_items WHERE itemID=$id");
+    mysqli_query($link, "DELETE FROM journey_items WHERE itemID=$id");
     header("Location: edit_journey.php?id=$jid");
     exit;
 }
@@ -51,7 +48,7 @@ if(isset($_POST['save_changes'])){
         if(str_starts_with($key,'add_item_day_') && $value!=""){
             $day_id = intval(str_replace("add_item_day_","",$key));
             $res_id = intval($value);
-            $link->query("INSERT INTO journey_items(dayID,reservationID) VALUES($day_id,$res_id)");
+            mysqli_query($link, "INSERT INTO journey_items(dayID,reservationID) VALUES($day_id,$res_id)");
         }
     }
     header("Location: edit_journey.php?id=$jid");
@@ -62,21 +59,95 @@ if(isset($_POST['save_changes'])){
 <html>
 <head>
 <title>Edit Journey</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <style>
-.edit-container{ max-width:900px; margin:50px auto; background:#fff; padding:40px; border-radius:12px; box-shadow:0 4px 18px rgba(0,0,0,0.1);}
-.section-title{ font-family:'Playfair Display',serif; color:var(--green-dark); font-size:32px; margin-bottom:20px;}
-.day-box{ padding:20px; border:2px solid var(--green-mid); border-radius:8px; margin-bottom:25px;}
+.edit-container{ 
+    max-width:900px; 
+    margin:50px auto; 
+    background:#1e2a28; 
+    padding:40px; 
+    border-radius:12px; 
+    box-shadow:0 6px 20px rgba(0,0,0,0.3);
+}
+.section-title{ 
+    font-family:'Playfair Display',serif; 
+    color:#a2e896; 
+    font-size:32px; 
+    margin-bottom:20px;
+    text-align: center;
+}
+.day-box{ 
+    padding:20px; 
+    border:2px solid #a2e896; 
+    border-radius:8px; 
+    margin-bottom:25px;
+    background: #2b3e3c;
+}
+.day-box h3 {
+    color: #a2e896;
+    margin-bottom: 15px;
+}
 .day-box p {
     margin: 15px 0;
-    padding: 10px 0;
-    background: #f9f9f9;
+    padding: 12px 15px;
+    background: #1e2a28;
     border-radius: 6px;
-    border-left: 3px solid var(--green-mid);
+    border-left: 3px solid #b8860b;
+    color: #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-.remove-btn{ background:#b22; padding:6px 14px; color:#fff; border-radius:6px; margin-left:10px;}
-.add-panel{ margin:25px 0; padding:15px; background:#f0f0f0; border-radius:8px;}
-.submit-btn{ margin-top:30px; width:100%; padding:12px; border:none; border-radius:6px; background:var(--green-mid); color:white; font-size:17px;}
+.remove-btn{ 
+    background:#dc3545; 
+    padding:6px 14px; 
+    color:#fff; 
+    border-radius:6px; 
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.remove-btn:hover{ 
+    background:#c82333;
+}
+.add-panel{ 
+    margin:25px 0; 
+    padding:15px; 
+    background:#1e2a28; 
+    border-radius:8px;
+}
+.add-panel label {
+    color: #a2e896;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+}
+.add-panel select {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #444;
+    background: #2b3e3c;
+    color: #eee;
+    font-family: 'Poppins', sans-serif;
+}
+.submit-btn{ 
+    margin-top:30px; 
+    width:100%; 
+    padding:12px; 
+    border:none; 
+    border-radius:6px; 
+    background:#b8860b; 
+    color:white; 
+    font-size:17px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: 'Poppins', sans-serif;
+}
+.submit-btn:hover{ 
+    background:#d4af37;
+}
 </style>
 </head>
 <body>
@@ -101,14 +172,14 @@ if(isset($_POST['save_changes'])){
 </header>
 
 <section class="edit-container">
-<h1 class="section-title">Edit Journey: <?= $j['JourneyName'] ?></h1>
+<h1 class="section-title">Edit Journey: <?= htmlspecialchars($j['JourneyName']) ?></h1>
 <form method="POST">
-<?php while($d = $days->fetch_assoc()): ?>
+<?php while($d = mysqli_fetch_assoc($days)): ?>
 <div class="day-box">
     <h3>Day <?= $d['DayNumber'] ?></h3>
 
     <?php
-    $items = $link->query("
+    $items = mysqli_query($link, "
         SELECT ji.*, 
                COALESCE(e.eventName, p.name) AS rname 
         FROM journey_items ji
@@ -119,8 +190,9 @@ if(isset($_POST['save_changes'])){
     ");
     ?>
 
-    <?php while($i=$items->fetch_assoc()): ?>
-        <p><?= $i['rname'] ?>
+    <?php while($i = mysqli_fetch_assoc($items)): ?>
+        <p>
+            <span><?= htmlspecialchars($i['rname']) ?></span>
             <button name="remove" value="<?= $i['ItemID'] ?>" class="remove-btn">Remove</button>
         </p>
     <?php endwhile; ?>
@@ -130,7 +202,7 @@ if(isset($_POST['save_changes'])){
         <select name="add_item_day_<?= $d['DayID'] ?>">
             <option value="">Choose reservation</option>
             <?php foreach($all_reservations as $r): ?>
-            <option value="<?= $r['ReservationID'] ?>"><?= $r['name'] ?></option>
+            <option value="<?= $r['ReservationID'] ?>"><?= htmlspecialchars($r['name']) ?></option>
             <?php endforeach; ?>
         </select>
     </div>
@@ -146,3 +218,6 @@ if(isset($_POST['save_changes'])){
 </footer>
 </body>
 </html>
+<?php
+mysqli_close($link);
+?>

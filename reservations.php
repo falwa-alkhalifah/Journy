@@ -419,21 +419,19 @@ HTML;
 
 <link rel="stylesheet" href="style.css">
 
-<link rel="stylesheet" href="style2.css">
-
 <style>
 
 .reservations-section { width: 90%; max-width: 900px; margin: 60px auto;}
 
-.section-title { color: #ff6b00; font-family: 'Playfair Display', serif; font-size: 1.7rem; margin-bottom: 20px; border-left: 4px solid #ff6b00; padding-left: 10px;}
+.section-title { color: #b8860b; font-family: 'Playfair Display', serif; font-size: 1.7rem; margin-bottom: 20px; border-left: 4px solid #b8860b; padding-left: 10px;}
 
 .reservations-container { display: flex; flex-direction: column; gap: 20px;}
 
-.res-card { display: flex; align-items: center; justify-content: space-between; background: #fff; border-radius: 10px; padding: 15px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s;}
+.res-card { display: flex; align-items: center; justify-content: space-between; background: #1e2a28; border-radius: 10px; padding: 15px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s;}
 
-.res-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(255,107,0,0.3);}
+.res-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(184,134,11,0.3);}
 
-.res-info h3 { font-family: 'Playfair Display', serif; color: #ff6b00; margin-bottom: 5px;}
+.res-info h3 { font-family: 'Playfair Display', serif; color: #b8860b; margin-bottom: 5px;}
 
 .res-info p { color: #555; font-size: 0.9rem;}
 
@@ -445,7 +443,7 @@ HTML;
 
 .cancel-btn { background-color: #dc3545; }
 
-.btn-small { background-color: #ff6b00; } 
+.btn-small { background-color: #b8860b; } 
 
 .search-section { text-align: center; margin: 30px 0;}
 

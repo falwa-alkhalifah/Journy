@@ -246,43 +246,77 @@ $event_price = $is_event ? $unit_price : 0.00;
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Journy - Details | <?php echo htmlspecialchars($item_name); ?></title>
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="style2.css">
 <style>
+
 /* --- POPUP STYLES --- */
+
 .popup-overlay {
+
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); 
-    display: <?php echo $show_popup && $is_event ? 'flex' : 'none'; ?>; 
+
+    background-color: rgba(0, 0, 0, 0.6);
+
+    display: <?php echo $show_popup && $is_event ? 'flex' : 'none'; ?>;
+
     justify-content: center; align-items: center; z-index: 1000;
+
 }
+
 .popup-box {
-    background: white; border-radius: 15px; padding: 40px 50px; text-align: center; max-width: 480px; width: 90%;
+
+    background: #1e2a28; border-radius: 15px; padding: 40px 50px; text-align: center; max-width: 480px; width: 90%;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); font-family: 'Poppins', sans-serif;
+
 }
-.popup-box h1 { color: #333; font-size: 24px; margin-bottom: 15px; line-height: 1.4; }
-.popup-box h3 { color: #ff6b00; font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 20px; }
-.popup-box button { background-color:#ff6b00;color:white;border:none;border-radius:8px;font-size:17px;padding:12px 30px;cursor:pointer; margin-top: 15px; }
+
+.popup-box h1 { color: #a2e896; font-size: 24px; margin-bottom: 15px; line-height: 1.4; }
+
+.popup-box h3 { color: #a2e896; font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 20px; }
+
+.popup-box button { background-color:#b8860b;color:white;border:none;border-radius:8px;font-size:17px;padding:12px 30px;cursor:pointer; margin-top: 15px; }
+
+
 
 .event-container { padding:60px 100px; display:flex; flex-wrap:wrap; justify-content:center; gap:60px; align-items:flex-start; max-width:1400px; margin:auto;}
-.event-image-area { flex:1; min-width:550px; max-width:650px; text-align: center; } 
+
+.event-image-area { flex:1; min-width:550px; max-width:650px; text-align: center; }
+
 .event-details-card { flex:1; min-width:500px; max-width:600px; padding:40px;}
-.event-image-area img:first-child { border-radius:10px; height: 450px; width: 100%; object-fit:cover;} 
+
+.event-image-area img:first-child { border-radius:10px; height: 450px; width: 100%; object-fit:cover;}
+
 /* Vocabulary style for alignment */
+
 .vocab-item {
+
     text-align: left;
+
     margin-bottom: 8px;
+
     font-size: 16px;
+
 }
+
 .vocab-word {
+
     font-weight: bold;
-    color: var(--green-dark); 
+
+    color: var(--green-dark);
+
 }
+
 .vocab-context {
+
     font-style: italic;
-    color: #777;
+
+    color: #a2e896;
+
     margin-left: 5px;
+
 }
+
 /* --- POPUP STYLES END --- */
+
 </style>
 </head>
 
@@ -313,7 +347,7 @@ $event_price = $is_event ? $unit_price : 0.00;
             <img src="<?php echo htmlspecialchars($image_url); ?>" alt="<?php echo htmlspecialchars($item_name); ?>">
         </div>
         <div class="card event-details-card">
-            <h3 style="color:#ff6b00;font-size:34px;font-family:'Playfair Display',serif;margin-bottom:25px;"><?php echo htmlspecialchars($item_name); ?></h3>  
+            <h3 style="color:#a2e896;font-size:34px;font-family:'Playfair Display',serif;margin-bottom:25px;"><?php echo htmlspecialchars($item_name); ?></h3>  
             <?php if ($is_event): ?>
                 <p style="font-size:18px;margin-bottom:10px;"><strong>Date:</strong> <?php echo htmlspecialchars($date_display); ?></p>
                 <p style="font-size:18px;margin-bottom:10px;"><strong>Location:</strong> <?php echo htmlspecialchars($location); ?>, <?php echo htmlspecialchars($city); ?></p>
@@ -337,9 +371,9 @@ $event_price = $is_event ? $unit_price : 0.00;
                 <?php endif; ?>
                 <?php if ($pending_reservation_id && !isset($_GET['status_confirmed'])): ?>
                     <form action="event_details.php?id=<?php echo $item_id; ?>&type=event" method="POST">
-                        <p style="font-size: 1.1rem; color: #ff6b00; font-weight: bold;">A booking for this event is pending. Complete your reservation now:</p>
+                        <p style="font-size: 1.1rem; color: #b8860b; font-weight: bold;">A booking for this event is pending. Complete your reservation now:</p>
                         <input type="hidden" name="reservation_id" value="<?php echo $pending_reservation_id; ?>">
-                        <button type="submit" name="confirm_event_booking" class="btn-small" style="background-color: #ff6b00;color:white;border:none;border-radius:8px;font-size:17px;padding:14px 35px;cursor:pointer;">
+                        <button type="submit" name="confirm_event_booking" class="btn-small" style="background-color: #b8860b;color:white;border:none;border-radius:8px;font-size:17px;padding:14px 35px;cursor:pointer;">
                             Complete Event Booking
                         </button>
                     </form>
@@ -347,12 +381,12 @@ $event_price = $is_event ? $unit_price : 0.00;
                     <form action="event_details.php?id=<?php echo $item_id; ?>&type=event" method="POST">
                         <div style="margin-bottom:15px;">
                             <label for="tickets" style="font-size:18px;margin-right:10px;color: #555; padding: 0 15px 15px;"><strong>Number of Tickets:</strong></label>
-                            <input type="number" id="tickets" name="tickets" min="1" max="<?php echo htmlspecialchars($available_tickets); ?>" value="1" style="width:80px;padding:8px;border:2px solid #ff6b00;border-radius:8px;text-align:center;">
+                            <input type="number" id="tickets" name="tickets" min="1" max="<?php echo htmlspecialchars($available_tickets); ?>" value="1" style="width:80px;padding:8px;border:2px solid #b8860b;border-radius:8px;text-align:center;">
                         </div>
                         <p style="font-size:20px; margin-bottom: 25px; font-weight: bold;">
-                            Total Cost: <span id="totalCost" style="color:#ff6b00;">SAR 0.00</span>
+                            Total Cost: <span id="totalCost" style="color:#b8860b;">SAR 0.00</span>
                         </p>
-                        <button type="submit" name="reserve" style="background-color:#ff6b00;color:white;border:none;border-radius:8px;font-size:17px;padding:14px 35px;cursor:pointer;" <?php echo ($available_tickets <= 0) ? 'disabled' : ''; ?>>
+                        <button type="submit" name="reserve" style="background-color:#b8860b;color:white;border:none;border-radius:8px;font-size:17px;padding:14px 35px;cursor:pointer;" <?php echo ($available_tickets <= 0) ? 'disabled' : ''; ?>>
                             <?php echo ($available_tickets <= 0) ? 'Tickets Sold Out' : 'Reserve Now'; ?>
                         </button>
                     </form>
@@ -367,7 +401,7 @@ $event_price = $is_event ? $unit_price : 0.00;
                 <?php if ($pending_reservation_id && !isset($_GET['status_confirmed'])): ?>
                     <form action="event_details.php?id=<?php echo $item_id; ?>&type=place" method="POST">
                         <input type="hidden" name="reservation_id" value="<?php echo $pending_reservation_id; ?>">
-                        <button type="submit" name="confirm_place_booking" class="btn-small" style="background-color: #ff6b00;color:white;border:none;border-radius:8px;font-size:17px;padding:14px 35px;cursor:pointer;">
+                        <button type="submit" name="confirm_place_booking" class="btn-small" style="background-color: #b8860b;color:white;border:none;border-radius:8px;font-size:17px;padding:14px 35px;cursor:pointer;">
                             Complete Booking 
                         </button>
                     </form>
@@ -375,7 +409,7 @@ $event_price = $is_event ? $unit_price : 0.00;
                     <?php if (!isset($_GET['status_confirmed'])): ?>
                     <p style="color: #555; font-weight: bold; font-size: 1.1rem;">No Pending Reservation found for this item. Please reserve it on the Discover page.</p>
                     <?php endif; ?>
-                    <a href="reservations.php" class="btn-small" style="background-color: #ff6b00; padding: 14px 35px; border-radius: 8px; color: white; text-decoration: none; font-size: 17px; display: inline-block;">Go to Reservations</a>
+                    <a href="reservations.php" class="btn-small" style="background-color: #b8860b; padding: 14px 35px; border-radius: 8px; color: white; text-decoration: none; font-size: 17px; display: inline-block;">Go to Reservations</a>
                 <?php endif; ?>
             <?php endif; ?>
         </div>

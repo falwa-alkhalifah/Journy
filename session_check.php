@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 // Check if user is logged in
 function checkAuth() {
     if (!isset($_SESSION['user_id'])) {

@@ -86,7 +86,7 @@ $carousel_items = array_merge($all_events, $all_restaurants, $all_hotels);
     <div class="hero-content">
         <h1>Discover Amazing Events Across Saudi Arabia</h1>
         <p>Plan your trips, book tickets, and explore local experiences effortlessly</p>
-        <a href="discover.html" class="btn">Explore Events</a>
+        <a href="discover.php" class="btn">Explore Events</a>
     </div>
   </div>
 </header>

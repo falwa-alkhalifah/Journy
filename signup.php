@@ -1,158 +1,113 @@
 <?php
 session_start();
-require_once 'db_config.php';
-
-// If user is already logged in, redirect to home
-if (isset($_SESSION['user_id'])) {
-    header('Location: index.php');
-    exit;
-}
+require_once 'db_config.php'; // provides $link (mysqli)
 
 function h($v){ return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
 
-$errors = ['name'=>'','email'=>'','password'=>'','form'=>''];
+$errors = ['name'=>'','email'=>'','password'=>''];
 $name = $email = '';
+$role = 'user';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    $name     = trim($_POST['name'] ?? '');
-    $email    = trim($_POST['email'] ?? '');
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
-    $role     = $_POST['role'] ?? 'user';
+    $role = ($_POST['role'] ?? 'user') === 'admin' ? 'admin' : 'user';
 
-    // Validate Name
-    if ($name === '') {
-        $errors['name'] = 'Please enter your full name.';
-    }
+    // validate
+    if ($name === '') $errors['name'] = 'Please enter your full name.';
+    if ($email === '') $errors['email'] = 'Please enter your email.';
+    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors['email'] = 'Invalid email format.';
 
-    // Validate Email
-    if ($email === '') {
-        $errors['email'] = 'Please enter your email.';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors['email'] = 'Invalid email format.';
-    } else {
-        // Check if email exists
-        $sql = "SELECT Email FROM users WHERE Email = ?";
-        $stmt = mysqli_prepare($link, $sql);
-        mysqli_stmt_bind_param($stmt, "s", $email);
-        mysqli_stmt_execute($stmt);
-        $res = mysqli_stmt_get_result($stmt);
+    if (strlen($password) < 8) $errors['password'] = 'Password must be at least 8 characters.';
 
-        if (mysqli_fetch_assoc($res)) {
-            $errors['email'] = 'Email is already registered.';
+    // check duplicate email if no error so far
+    if ($errors['email'] === '') {
+        $sql = "SELECT 1 FROM users WHERE Email = ?";
+        if ($stmt = mysqli_prepare($link, $sql)) {
+            mysqli_stmt_bind_param($stmt, "s", $email);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_store_result($stmt);
+            if (mysqli_stmt_num_rows($stmt) > 0) {
+                $errors['email'] = 'Email is already registered.';
+            }
+            mysqli_stmt_close($stmt);
+        } else {
+            $errors['email'] = 'Database error: ' . mysqli_error($link);
         }
     }
 
-    // Validate Password
-    if (strlen($password) < 8) {
-        $errors['password'] = 'Password must be at least 8 characters.';
+    // if all ok -> insert and auto-login
+    if ($errors['name']==='' && $errors['email']==='' && $errors['password']==='') {
+        $hash = password_hash($password, PASSWORD_BCRYPT);
+
+        $sql = "INSERT INTO users (FullName, Email, Password, Role) VALUES (?, ?, ?, ?)";
+        if ($stmt = mysqli_prepare($link, $sql)) {
+            mysqli_stmt_bind_param($stmt, "ssss", $name, $email, $hash, $role);
+            $ok = mysqli_stmt_execute($stmt);
+            if ($ok) {
+                $user_id = mysqli_insert_id($link);
+                // set session and redirect
+                $_SESSION['user_id'] = (int)$user_id;
+                $_SESSION['user_name'] = $name;
+                $_SESSION['role'] = $role;
+                header('Location: ' . ($role === 'admin' ? 'admin.php' : 'index.php'));
+                exit;
+            } else {
+                $errors['email'] = 'Failed to create account. Try again.';
+            }
+            mysqli_stmt_close($stmt);
+        } else {
+            $errors['email'] = 'Database error: ' . mysqli_error($link);
+        }
     }
-
- // If everything OK → Insert into DB
-if ($errors['name']==='' && $errors['email']==='' && $errors['password']==='') {
-
-    $hash = password_hash($password, PASSWORD_BCRYPT);
-
-    // إدخال المستخدم في قاعدة البيانات
-    $sql  = "INSERT INTO users (FullName, Email, Password, Role) VALUES (?, ?, ?, ?)";
-    $stmt = mysqli_prepare($link, $sql);
-    mysqli_stmt_bind_param($stmt, "ssss", $name, $email, $hash, $role);
-    mysqli_stmt_execute($stmt);
-
-    // الحصول على الـ ID الجديد
-    $newId = mysqli_insert_id($link);
-
-    // فتح جلسة للمستخدم مباشرة بعد التسجيل
-    $_SESSION['user_id']   = $newId;
-    $_SESSION['user_name'] = $name;
-    $_SESSION['role']      = $role;
-
-    // توجيه حسب نوع الحساب
-    if ($role === 'admin') {
-        header("Location: admin.php");
-    } else {
-        header("Location: index.php");
-    }
-    exit;
-}
-
 }
 ?>
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Journy - Sign Up</title>
-<link rel="stylesheet" href="style.css" />
-
-<style>
-  .auth-section{
-    max-width:680px; margin:80px auto; background:#fff;
-    border:1px solid rgba(0,0,0,.08); border-radius:12px;
-    padding:40px 30px; box-shadow:0 6px 20px rgba(0,0,0,.08);
-  }
-  .auth-section h2{
-    font-family:'Playfair Display',serif; font-size:32px;
-    color:#333; text-align:center; margin-bottom:8px;
-  }
-  .auth-section .subtitle{
-    text-align:center; color:#666; margin-bottom:24px; font-size:15px;
-  }
-  .auth-section label{
-    display:block; font-weight:600; color:#333; margin:14px 0 6px;
-  }
-  .auth-section .input-wrapper{
-    display:flex; align-items:center; gap:8px; background:#fff;
-    border:1px solid #ddd; border-radius:10px; padding:10px 12px;
-    transition:border-color .2s, box-shadow .2s;
-  }
-  .auth-section .input-wrapper:focus-within{
-    border-color:#ff6b00; box-shadow:0 0 0 3px rgba(255,107,0,.15);
-  }
-  .auth-section input{
-    width:100%; border:0; outline:0; background:transparent;
-    font-size:16px; color:#333;
-  }
-  .auth-section .peek{
-    border:0; background:#f5f5f5; color:#555;
-    padding:6px 8px; border-radius:8px; cursor:pointer;
-  }
-  .auth-section .grid-2{
-    display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px;
-  }
-  .auth-section .checkbox{
-    display:flex; align-items:center; gap:10px; padding:10px 12px;
-    border:1px solid #e9e9e9; border-radius:10px; background:#fafafa;
-    cursor:pointer; user-select:none;
-  }
-  .auth-section .checkbox:hover{
-    border-color:#ffeadf; background:#fff7f2;
-  }
-  .auth-section .checkbox input{
-    accent-color:#ff6b00; width:18px; height:18px;
-  }
-  .auth-section .pill{
-    padding:2px 8px; border-radius:999px; font-size:12px;
-    color:#ff6b00; background:#fff2e9; border:1px solid #ffe1cc;
-  }
-  .auth-section .error{
-    color:#d93025; font-size:13px; margin-top:6px; display:block;
-  }
-  .auth-section .btn{
-    width:100%; margin-top:14px; background:#ff6b00; color:#fff;
-    border:none; border-radius:10px; padding:12px; font-weight:600;
-    cursor:pointer; transition:background .2s;
-  }
-  .auth-section .btn:hover{ background:#e65b00; }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Journy - Sign Up</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* scoped signup styles - dark theme */
+    .auth-section {
+      max-width: 700px;
+      margin: 70px auto;
+      background: #1e2a28;
+      border: 1px solid rgba(0,0,0,0.4);
+      border-radius: 12px;
+      padding: 34px;
+      color: #eee;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+    }
+    .auth-section h2 { font-family:'Playfair Display', serif; font-size:30px; text-align:center; color:#f6f7f6; margin-bottom:6px; }
+    .auth-section .subtitle { color:#d6d6d6; text-align:center; margin-bottom:18px; font-size:14px; }
+    label { display:block; color:#dfeee0; font-weight:600; margin:12px 0 6px; }
+    .input-wrapper {
+      display:flex; align-items:center; gap:8px; background:#13201f; border:1px solid #2b3e3c; border-radius:10px; padding:10px 12px;
+    }
+    .input-wrapper input { width:100%; border:0; outline:0; background:transparent; color:#eee; font-size:15px; }
+    .peek { border:0; background:#23312f; color:#dfeee0; padding:6px 8px; border-radius:8px; cursor:pointer; }
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px; }
+    .checkbox { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; background:#13201f; border:1px solid #2b3e3c; cursor:pointer; color:#dfeee0; }
+    .checkbox input { accent-color:#a2e896; width:18px; height:18px; }
+    .pill { padding:2px 8px; border-radius:999px; font-size:12px; color:#a2e896; background:#10221a; border:1px solid #21342e; margin-left:8px; }
+    .btn { width:100%; margin-top:16px; background:#b8860b; color:#141f1e; border:none; border-radius:10px; padding:12px; font-weight:700; }
+    .btn:hover { background:#d4af37; }
+    .error { color:#ff9aa2; font-size:13px; margin-top:8px; display:block; }
+    .switch { margin-top:12px; color:#cfe6c3; text-align:center; }
+    .switch a { color:#a2e896; text-decoration:underline; }
+    @media (max-width:768px) { .auth-section{ margin:30px 16px; padding:20px; } .grid-2{ grid-template-columns:1fr; } }
+  </style>
 </head>
-
 <body>
 <header>
   <nav>
     <div class="logo">Journy</div>
     <ul class="nav-links">
+      <li><a href="index.php">Home</a></li>
       <li><a href="login.php">Login</a></li>
       <li><a href="signup.php" class="active">Sign Up</a></li>
     </ul>
@@ -160,65 +115,55 @@ if ($errors['name']==='' && $errors['email']==='' && $errors['password']==='') {
 </header>
 
 <main>
-  <section class="auth-section">
-    <h2>Create a Journy Account</h2>
-    <p class="subtitle">Join Journy to book events and discover nearby restaurants & hotels.</p>
+  <section class="auth-section" aria-labelledby="signup-title">
+    <h2 id="signup-title">Create a Journy Account</h2>
+    <p class="subtitle">Join Journy to book events and discover nearby places.</p>
 
-    <form method="post">
-
+    <form method="post" novalidate>
       <label for="name">Full Name</label>
       <div class="input-wrapper">
-        <input type="text" id="name" name="name" value="<?=h($name)?>" required>
+        <input id="name" name="name" type="text" value="<?= h($name) ?>" required>
       </div>
-      <small class="error"><?=$errors['name']?></small>
+      <?php if($errors['name']): ?><div class="error"><?= h($errors['name']) ?></div><?php endif; ?>
 
       <label for="email">Email</label>
       <div class="input-wrapper">
-        <input type="email" id="email" name="email" value="<?=h($email)?>" required>
+        <input id="email" name="email" type="email" value="<?= h($email) ?>" required>
       </div>
-      <small class="error"><?=$errors['email']?></small>
+      <?php if($errors['email']): ?><div class="error"><?= h($errors['email']) ?></div><?php endif; ?>
 
       <label for="password">Password</label>
       <div class="input-wrapper">
-        <input type="password" id="password" name="password" minlength="8" required>
-        <button type="button" class="peek" data-target="password">👁</button>
+        <input id="password" name="password" type="password" minlength="8" required>
+        <button class="peek" type="button" data-target="password" aria-label="Show password">👁</button>
       </div>
-      <small class="error"><?=$errors['password']?></small>
+      <?php if($errors['password']): ?><div class="error"><?= h($errors['password']) ?></div><?php endif; ?>
 
       <label>Account Type</label>
       <div class="grid-2">
-        <label class="checkbox">
-          <input type="radio" name="role" value="user" checked>
-          <span>User</span> <span class="pill">Book & explore places</span>
-        </label>
-        <label class="checkbox">
-          <input type="radio" name="role" value="admin">
-          <span>Admin</span> <span class="pill">Manage events & places</span>
-        </label>
+        <label class="checkbox"><input type="radio" name="role" value="user" <?= $role==='user' ? 'checked' : '' ?>> User <span class="pill">Book events</span></label>
+        <label class="checkbox"><input type="radio" name="role" value="admin" <?= $role==='admin' ? 'checked' : '' ?>> Admin <span class="pill">Manage events</span></label>
       </div>
 
-      <button class="btn" type="submit">Sign Up</button>
+      <button class="btn" type="submit">Sign Up & Login</button>
 
-      <p class="switch">Already have an account?
-        <a href="login.php">Login</a>
-      </p>
-
+      <p class="switch">Already have an account? <a href="login.php">Login</a></p>
     </form>
   </section>
 </main>
 
 <footer>
-  <p>&copy; 2025 Journy. All rights reserved.</p>
+  <p style="text-align:center; color:#9fbf9a; padding:28px 0;">&copy; 2025 Journy. All rights reserved.</p>
 </footer>
 
 <script>
-document.querySelectorAll('.peek').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    const f = document.getElementById(btn.dataset.target);
-    f.type = f.type === 'password' ? 'text' : 'password';
+  document.querySelectorAll('.peek').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const t = document.getElementById(b.dataset.target);
+      t.type = t.type === 'password' ? 'text' : 'password';
+      b.setAttribute('aria-label', t.type === 'password' ? 'Show password' : 'Hide password');
+    });
   });
-});
 </script>
-
 </body>
 </html>
